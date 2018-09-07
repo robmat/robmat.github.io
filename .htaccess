@@ -1,0 +1,3 @@
+allow from all
+Options All +Indexes
+Options +DirList
