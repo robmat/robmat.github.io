@@ -522,6 +522,10 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
+.m-1 {
+  margin: 0.25rem;
+}
+
 .mb-5 {
   margin-bottom: 1.25rem;
 }
@@ -610,16 +614,12 @@ video {
   padding: 0.5rem;
 }
 
-.p-20 {
-  padding: 5rem;
+.p-3 {
+  padding: 0.75rem;
 }
 
 .p-5 {
   padding: 1.25rem;
-}
-
-.p-3 {
-  padding: 0.75rem;
 }
 
 .text-center {
@@ -689,12 +689,12 @@ video {
 }
 
 @media (min-width: 640px) {
-  .sm\:p-5 {
-    padding: 1.25rem;
-  }
-
   .sm\:p-3 {
     padding: 0.75rem;
+  }
+
+  .sm\:p-5 {
+    padding: 1.25rem;
   }
 
   .sm\:text-3xl {
@@ -704,10 +704,6 @@ video {
 }
 
 @media (min-width: 768px) {
-  .md\:p-10 {
-    padding: 2.5rem;
-  }
-
   .md\:p-5 {
     padding: 1.25rem;
   }
@@ -731,10 +727,6 @@ video {
 @media (min-width: 1280px) {
   .xl\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .xl\:p-12 {
-    padding: 3rem;
   }
 
   .xl\:p-20 {
