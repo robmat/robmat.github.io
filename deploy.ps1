@@ -13,6 +13,6 @@ $modifiedContent = $fileContent -replace "\.\./", ""
 # Save the modified content back to the file
 $modifiedContent | Set-Content $destinationFilePath -Force -Verbose
 
-Write-Host "Empty folders deleted. Press any key to exit..."
+Write-Host "Deployed. Press any key to exit..."
 $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown") | Out-Null
 
