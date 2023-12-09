@@ -1,3 +1,7 @@
-RewriteEngine On
-RewriteCond %{HTTPS} !=on 
-RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+RewriteEngine on
+
+# Shield emberfox.online from hotlinking
+RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?emberfox\.online [NC]
+RewriteRule \.(?:gif|png|jpg|jpeg|css|js)$ - [NC,F,L]
+
+# Other .htaccess rules go here
