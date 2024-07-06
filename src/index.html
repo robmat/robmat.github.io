@@ -7,9 +7,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="../dist/output.css" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="media/favicon.ico">
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-959467352"></script>
-  <script> window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); } gtag('js', new Date()); gtag('config', 'AW-959467352'); </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-959467352"><!-- MIND THE GAP --></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('consent', 'default', {
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'ad_storage': 'denied',
+      'analytics_storage': 'denied',
+      'wait_for_update': 500,
+    });
+    gtag('js', new Date());
+    gtag('config', 'AW-959467352');
+
+    window.acceptCookies = function () {
+      localStorage.setItem("consentGranted", "true");
+      function gtag() { dataLayer.push(arguments); }
+
+      gtag('consent', 'update', {
+        ad_user_data: 'granted',
+        ad_personalization: 'granted',
+        ad_storage: 'granted',
+        analytics_storage: 'granted'
+      });
+      document.querySelector('#cookieConsent').remove();
+    }
+
+    window.onload = function() {
+      if (localStorage.getItem("consentGranted") == 'true') {
+        document.querySelector('#cookieConsent').remove();
+      }
+    }
+  </script>
+  <style>
+    #cookieConsent {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #f1f1f1;
+      padding: 15px;
+      text-align: center;
+      border-top: 1px solid #ccc;
+    }
+
+    #cookieConsent button {
+      margin-left: 10px;
+      padding: 5px 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
 </head>
 
 <body class="font-thin font-sans bg-fixed bg-center bg-cover" style="background-image: url(../media/background.jpg)">
@@ -30,6 +83,10 @@
     </div>
   </header>
   <main>
+    <div id="cookieConsent">
+      This website uses cookies to ensure you get the best experience.
+      <button id="acceptCookies" onclick="window.acceptCookies()">Got it!</button>
+    </div>
     <div class="grid xl:grid-cols-3 lg:grid-cols-2 xs:grid-cols-1 gap-20 sm:p-3 md:p-5 lg:p-8 xl:p-20 p-3">
       <!--GENERATED START -->
       <div class="flex flex-col bg-stone-100/75 rounded-xl p-5">
