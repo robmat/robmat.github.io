@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
@@ -9,10 +9,43 @@
   <link rel="icon" type="image/x-icon" href="media/favicon.ico">
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-959467352"><!-- MIND THE GAP --></script>
   <script>
+    // just generate a random email 
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function getRandomChar() {
+      const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+      return chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+
+    function getRandomString(length) {
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += getRandomChar();
+      }
+      return result;
+    }
+
+    function generateRandomEmail() {
+      const usernameLength = getRandomInt(5, 10);
+      const domainLength = getRandomInt(5, 10);
+      const tldLength = getRandomInt(2, 3);
+      const username = getRandomString(usernameLength);
+      const domain = getRandomString(domainLength);
+      const tld = getRandomString(tldLength);
+      return `${username}@${domain}.${tld}`;
+    }
+
+    const userEmailGenerated = generateRandomEmail();
+
     window.dataLayer = window.dataLayer || [];
     function gtag() {
       dataLayer.push(arguments);
     }
+    gtag('set', 'user_data', {
+      "email": userEmailGenerated
+    });
     gtag('consent', 'default', {
       'ad_user_data': 'denied',
       'ad_personalization': 'denied',
@@ -21,7 +54,7 @@
       'wait_for_update': 500,
     });
     gtag('js', new Date());
-    gtag('config', 'AW-959467352');
+    gtag('config', 'AW-959467352', { 'allow_enhanced_conversions': true });
 
     window.acceptCookies = function () {
       localStorage.setItem("consentGranted", "true");
@@ -36,8 +69,8 @@
       document.querySelector('#cookieConsent').remove();
     }
 
-    window.onload = function() {
-      if (localStorage.getItem("consentGranted") == 'true') {
+    window.onload = function () {
+      if (localStorage.getItem("consentGranted") == 'true' && document.querySelector('#cookieConsent')) {
         document.querySelector('#cookieConsent').remove();
       }
     }
