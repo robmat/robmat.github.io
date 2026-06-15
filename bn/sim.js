@@ -47,11 +47,13 @@ window.SimEngine = (() => {
     const events = [];
 
     // P1: next unit in round-robin order fires one shot
-    fireOne(sim, 'p1', 'p2', events);
+    const p1Fired = fireOne(sim, 'p1', 'p2', events);
+    if (!p1Fired) events.push({ type: 'waiting', side: 'p1', turn: sim.turn });
     if (checkVictory(sim, 'p2', events)) { tickAll(sim); return events; }
 
     // P2: random available unit fires one shot
-    fireOne(sim, 'p2', 'p1', events);
+    const p2Fired = fireOne(sim, 'p2', 'p1', events);
+    if (!p2Fired) events.push({ type: 'waiting', side: 'p2', turn: sim.turn });
     checkVictory(sim, 'p1', events);
 
     // Tick everyone's cooldowns/reloads regardless of who fired
@@ -97,7 +99,7 @@ window.SimEngine = (() => {
       }
     }
 
-    if (!unit || atkIdx === -1) return;
+    if (!unit || atkIdx === -1) return false;
 
     const atk      = unit.stats.attacks[atkIdx];
     const atkState = unit.atkStates[atkIdx];
@@ -138,6 +140,7 @@ window.SimEngine = (() => {
         });
       }
     }
+    return true;
   }
 
   // Tick ALL units' states at end of each turn

@@ -721,7 +721,9 @@
             ev.turn
           );
           break;
-        // noAttack intentionally not logged — too noisy; visible via HP bars
+        case 'waiting':
+          logMessage(`⏳ ${ev.side === 'p1' ? 'P1' : 'AI'} waiting (reloading)`, ev.turn);
+          break;
         case 'victory':
           logMessage(`⚔ All ${ev.winner === 'p1' ? 'AI' : 'P1'} units destroyed!`, ev.turn);
           break;

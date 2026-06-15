@@ -36,7 +36,7 @@ window.WikiFetcher = (() => {
 
     // NPC / boss format
     const infobox = parseTemplate(wikitext, 'UnitInfobox');
-    const weapons  = extractAllTemplates(wikitext, 'WeaponBox').map(parseWeaponBox);
+    const weapons  = extractAllTemplates(wikitext, 'WeaponBox').flatMap(parseWeaponBox);
     return {
       wikiPage,
       isNPC:       true,
@@ -140,41 +140,41 @@ window.WikiFetcher = (() => {
     return res;
   }
 
-  // NPC weapon: {{WeaponBox}} wrapping {{UnitAttackBox}}
+  // NPC weapon: {{WeaponBox}} may contain multiple {{UnitAttackBox}} (tabber tabs)
   function parseWeaponBox(tabberBody) {
     const tabberArgs = parseTemplateArgs(tabberBody);
-    const attackBody = extractTemplateFromStr(tabberBody, 'UnitAttackBox');
-    if (!attackBody) return null;
-    const atk = parseTemplateArgs(attackBody);
+    const attackBodies = extractAllTemplatesFromStr(tabberBody, 'UnitAttackBox');
+    if (!attackBodies.length) return [];
 
-    // damage field: {{Explosive|213-288}}
-    const dmgMatch = (atk.damage || '').match(/\{\{(\w+)\|(\d+)-(\d+)\}\}/);
-    const critPct   = parseInt(((atk.crit || '').match(/^(\d+)%/) || [])[1]) || 0;
-
-    return {
-      name:          stripWikiMarkup(atk['game file name'] || '').replace(/_/g, ' '),
-      internalName:  atk['game file name'] || '',
-      damageType:    dmgMatch ? dmgMatch[1] : '',
-      minDmg:        dmgMatch ? parseInt(dmgMatch[2]) : 0,
-      maxDmg:        dmgMatch ? parseInt(dmgMatch[3]) : 0,
-      numAttacks:    1,
-      baseOffense:   parseInt(atk.offense)       || 0,
-      accuracy:      [],
-      baseCrit:      critPct,
-      critMod:       [],
-      armorPiercing: parseInt(atk.armorpiercing)  || 0,
-      power:         [],
-      targets:       (atk.targets || '').split(',').map(s => s.trim()).filter(Boolean),
-      range:         atk.range || '',
-      lof:           atk.lof  || '',
-      ammo:          parseInt(tabberArgs.ammo)    || 0,
-      ammoUsed:      parseInt(atk.ammoused)       || 1,
-      reload:        parseInt(tabberArgs.reload)  || 0,
-      preptime:      parseInt(atk.preptime)       || 0,
-      cooldown:      parseInt(atk.cooldown)       || parseInt(tabberArgs.cooldown) || 0,
-      dotType:       null,
-      dotDuration:   0,
-    };
+    return attackBodies.map(attackBody => {
+      const atk = parseTemplateArgs(attackBody);
+      const dmgMatch = (atk.damage || '').match(/\{\{(\w+)\|(\d+)-(\d+)\}\}/);
+      const critPct   = parseInt(((atk.crit || '').match(/^(\d+)%/) || [])[1]) || 0;
+      return {
+        name:          stripWikiMarkup(atk['game file name'] || '').replace(/_/g, ' '),
+        internalName:  atk['game file name'] || '',
+        damageType:    dmgMatch ? dmgMatch[1] : '',
+        minDmg:        dmgMatch ? parseInt(dmgMatch[2]) : 0,
+        maxDmg:        dmgMatch ? parseInt(dmgMatch[3]) : 0,
+        numAttacks:    1,
+        baseOffense:   parseInt(atk.offense)       || 0,
+        accuracy:      [],
+        baseCrit:      critPct,
+        critMod:       [],
+        armorPiercing: parseInt(atk.armorpiercing)  || 0,
+        power:         [],
+        targets:       (atk.targets || '').split(',').map(s => s.trim()).filter(Boolean),
+        range:         atk.range || '',
+        lof:           atk.lof  || '',
+        ammo:          parseInt(tabberArgs.ammo)    || 0,
+        ammoUsed:      parseInt(atk.ammoused)       || 1,
+        reload:        parseInt(tabberArgs.reload)  || 0,
+        preptime:      parseInt(atk.preptime)       || 0,
+        cooldown:      parseInt(atk.cooldown)       || parseInt(tabberArgs.cooldown) || 0,
+        dotType:       null,
+        dotDuration:   0,
+      };
+    });
   }
 
   // ── Template extraction ───────────────────────────────────────
@@ -222,6 +222,20 @@ window.WikiFetcher = (() => {
     if (start === -1) return null;
     const raw = extractRawTemplate(str, start);
     return raw ? raw.content.substring(name.length) : null;
+  }
+
+  function extractAllTemplatesFromStr(str, name) {
+    const results = [];
+    let pos = 0;
+    while (true) {
+      const start = str.indexOf(`{{${name}`, pos);
+      if (start === -1) break;
+      const raw = extractRawTemplate(str, start);
+      if (!raw) break;
+      results.push(raw.content.substring(name.length));
+      pos = raw.end;
+    }
+    return results;
   }
 
   // ── Template arg parsing ──────────────────────────────────────
