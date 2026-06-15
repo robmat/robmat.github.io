@@ -91,7 +91,64 @@
     simSpeed:        document.getElementById('sim-speed'),
     speedLabel:      document.getElementById('speed-label'),
     simRuns:         document.getElementById('sim-runs'),
+    tooltip:         document.getElementById('unit-tooltip'),
   };
+
+  // ── Unit tooltip ──────────────────────────────────────────────
+  function showTooltip(e, player, rowIdx, col) {
+    const unit = state.board[player][rowIdx][col];
+    if (!unit) { els.tooltip.style.display = 'none'; return; }
+
+    const stats    = state.unitStats[unit.wikiPage] || state.unitStats[unit.id];
+    const simUnit  = state.sim && state.sim.units[player]
+      .find(u => u.row === rowIdx && u.col === col);
+
+    const rank     = unit.rank || 1;
+    const rankData = stats && (stats.ranks.find(r => r.rank === rank) || stats.ranks[stats.ranks.length - 1]);
+    const maxHp    = simUnit ? simUnit.maxHp    : (rankData ? rankData.hp   : '?');
+    const curHp    = simUnit ? simUnit.currentHp : maxHp;
+    const armor    = rankData ? (rankData.armor ?? 0) : '?';
+
+    let html = `<div class="tt-name">${unit.name}</div>`;
+    html += `<div class="tt-row"><span class="tt-label">Rank</span><span class="tt-val">${rank}</span></div>`;
+    html += `<div class="tt-row"><span class="tt-label">HP</span><span class="tt-val">${curHp} / ${maxHp}</span></div>`;
+    html += `<div class="tt-row"><span class="tt-label">Armor</span><span class="tt-val">${armor}</span></div>`;
+
+    if (stats && stats.attacks.length) {
+      stats.attacks.forEach((atk, i) => {
+        const as = simUnit ? simUnit.atkStates[i] : null;
+        const ammoLeft = as ? (isFinite(as.ammoLeft) ? as.ammoLeft : '∞') : (atk.ammo > 0 ? atk.ammo : '∞');
+        let status = '';
+        if (as) {
+          if (as.reloadCountdown > 0)   status = `<span class="tt-busy">reload ${as.reloadCountdown}t</span>`;
+          else if (as.prepCountdown > 0) status = `<span class="tt-busy">cooldown ${as.prepCountdown}t</span>`;
+          else                           status = `<span class="tt-ready">ready</span>`;
+        }
+        html += `<div class="tt-atk">`;
+        html += `<span class="tt-atk-name">${atk.name || atk.internalName}</span><br>`;
+        html += `ammo ${ammoLeft}/${atk.ammo > 0 ? atk.ammo : '∞'}`;
+        if (status) html += ` &nbsp; ${status}`;
+        html += `</div>`;
+      });
+    }
+
+    els.tooltip.innerHTML = html;
+    els.tooltip.style.display = 'block';
+    positionTooltip(e);
+  }
+
+  function positionTooltip(e) {
+    const t   = els.tooltip;
+    const tw  = t.offsetWidth, th = t.offsetHeight;
+    const vw  = window.innerWidth,  vh = window.innerHeight;
+    let x = e.clientX + 14, y = e.clientY + 14;
+    if (x + tw > vw - 8) x = e.clientX - tw - 14;
+    if (y + th > vh - 8) y = e.clientY - th - 14;
+    t.style.left = x + 'px';
+    t.style.top  = y + 'px';
+  }
+
+  function hideTooltip() { els.tooltip.style.display = 'none'; }
 
   // ── Log helper ────────────────────────────────────────────────
   function logMessage(text, turn = null) {
@@ -140,10 +197,13 @@
           img.src = unit.img;
           img.alt = unit.name;
           img.className = 'unit-img';
-          img.title = unit.name;
           cell.appendChild(img);
           cell.classList.add('field-cell--occupied');
         }
+
+        cell.addEventListener('mouseenter', e => showTooltip(e, player, rowIdx, col));
+        cell.addEventListener('mousemove',  e => positionTooltip(e));
+        cell.addEventListener('mouseleave', hideTooltip);
 
         rowEl.appendChild(cell);
       }
