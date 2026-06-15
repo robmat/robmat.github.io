@@ -27,6 +27,7 @@ window.SimEngine = (() => {
           units[player].push({
             player, row: rowIdx, col: colIdx,
             id: cell.id, name: cell.name, img: cell.img, wikiPage: cell.wikiPage,
+            isBoss: cell.isBoss || false,
             rank, stats, rankData,
             maxHp: rankData.hp, currentHp: rankData.hp,
             atkStates, alive: true,
@@ -158,7 +159,12 @@ window.SimEngine = (() => {
   }
 
   function checkVictory(sim, loserSide, events) {
-    if (sim.units[loserSide].every(u => !u.alive)) {
+    const units   = sim.units[loserSide];
+    // P2 loses when the boss (Goliath Main) dies; P1 loses when all units die
+    const defeated = loserSide === 'p2'
+      ? units.some(u => u.isBoss && !u.alive)
+      : units.every(u => !u.alive);
+    if (defeated) {
       sim.finished = true;
       sim.winner   = loserSide === 'p2' ? 'p1' : 'p2';
       events.push({ type: 'victory', winner: sim.winner, turn: sim.turn });

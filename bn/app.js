@@ -22,7 +22,7 @@
       label: 'Repeatable',
       subUnits: [
         { id: 'mlrsLeft',    name: 'MLRS (Left)',   wikiPage: 'Multi-Launch_Rocket_System_(Left)',          img: 'assets/GoliathTankLeft.png',  col: 1 },
-        { id: 'goliathMain', name: 'Goliath Tank',  wikiPage: 'Goliath_Tank_(Main)',                        img: 'assets/GoliathTankMain.png',  col: 2 },
+        { id: 'goliathMain', name: 'Goliath Tank',  wikiPage: 'Goliath_Tank_(Main)',                        img: 'assets/GoliathTankMain.png',  col: 2, isBoss: true },
         { id: 'mlrsRight',   name: 'MLRS (Right)',  wikiPage: 'Multi-Launch_Rocket_System_(Right)',         img: 'assets/GoliathTankRight.png', col: 3 },
       ],
     },
@@ -30,7 +30,7 @@
       label: 'Mission',
       subUnits: [
         { id: 'mlrsLeftM',    name: 'MLRS (Left)',  wikiPage: 'Multi-Launch_Rocket_System_(Left)_(Mission)',  img: 'assets/GoliathTankLeft.png',  col: 1 },
-        { id: 'goliathMainM', name: 'Goliath Tank', wikiPage: 'Goliath_Tank_(Main)_(Mission)',                img: 'assets/GoliathTankMain.png',  col: 2 },
+        { id: 'goliathMainM', name: 'Goliath Tank', wikiPage: 'Goliath_Tank_(Main)_(Mission)',                img: 'assets/GoliathTankMain.png',  col: 2, isBoss: true },
         { id: 'mlrsRightM',   name: 'MLRS (Right)', wikiPage: 'Multi-Launch_Rocket_System_(Right)_(Mission)', img: 'assets/GoliathTankRight.png', col: 3 },
       ],
     },
