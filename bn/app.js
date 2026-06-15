@@ -36,7 +36,7 @@
     },
   };
 
-  const TRAY_COUNT = 11;
+  const TRAY_COUNT = 12;
 
   function freshBoard() {
     return BOARD_ROWS.map(n => Array(n).fill(null));
