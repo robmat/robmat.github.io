@@ -148,14 +148,16 @@ window.WikiFetcher = (() => {
 
     return attackBodies.map(attackBody => {
       const atk = parseTemplateArgs(attackBody);
-      const dmgMatch = (atk.damage || '').match(/\{\{(\w+)\|(\d+)-(\d+)\}\}/);
-      const critPct   = parseInt(((atk.crit || '').match(/^(\d+)%/) || [])[1]) || 0;
+      // damage format: {{Type|min-max}} or {{Type|min-max (xN)}}
+      const dmgMatch = (atk.damage || '').match(/\{\{(\w+)\|(\d+)-(\d+)(?:\s*\(x(\d+)\))?\s*\}\}/);
+      const rpt      = dmgMatch ? (parseInt(dmgMatch[4]) || 1) : 1;
+      const critPct  = parseInt(((atk.crit || '').match(/^(\d+)%/) || [])[1]) || 0;
       return {
         name:          stripWikiMarkup(atk['game file name'] || '').replace(/_/g, ' '),
         internalName:  atk['game file name'] || '',
         damageType:    dmgMatch ? dmgMatch[1] : '',
-        minDmg:        dmgMatch ? parseInt(dmgMatch[2]) : 0,
-        maxDmg:        dmgMatch ? parseInt(dmgMatch[3]) : 0,
+        minDmg:        dmgMatch ? parseInt(dmgMatch[2]) * rpt : 0,
+        maxDmg:        dmgMatch ? parseInt(dmgMatch[3]) * rpt : 0,
         numAttacks:    1,
         baseOffense:   parseInt(atk.offense)       || 0,
         accuracy:      [],
