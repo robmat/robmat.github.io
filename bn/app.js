@@ -381,7 +381,12 @@
   function ensurePriority(wikiPage) {
     if (!state.attackPriority[wikiPage]) {
       const stats = state.unitStats[wikiPage];
-      state.attackPriority[wikiPage] = stats ? stats.attacks.map((_, i) => i) : [];
+      if (!stats) { state.attackPriority[wikiPage] = []; return; }
+      let order = stats.attacks.map((_, i) => i);
+      // Default: Shrapnel Bomb first if present
+      const bombIdx = stats.attacks.findIndex(a => a.internalName === 'air_bomb_drop_rnd');
+      if (bombIdx > 0) order = [bombIdx, ...order.filter(i => i !== bombIdx)];
+      state.attackPriority[wikiPage] = order;
     }
   }
 
