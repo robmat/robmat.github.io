@@ -1,0 +1,123 @@
+{
+  "_notes": {
+    "coordinate_system": "Tiles are [row, col] in the enemy field. Row 0=front(5 cols), Row 1=mid(5 cols), Row 2=back(3 cols).",
+    "targeting_types": {
+      "tile":     "Player/AI chooses a specific [row,col]. 'hits' are offsets [dRow,dCol] from that tile.",
+      "column":   "Player/AI chooses column index (0-4). 'hits' are [rowIndex, 0] pairs; col is substituted at runtime.",
+      "row":      "Player/AI chooses row index (0-2). 'hits' covers all valid columns in that row.",
+      "absolute": "No targeting choice — fixed tile positions listed directly."
+    },
+    "sources": "Derived from GIF animations in assets/gifs/."
+  },
+
+  "air_seaplane_guns": {
+    "name": "Scissors",
+    "targeting": "column",
+    "hits": [
+      { "rowIndex": 0, "dmgMult": 1.00 },
+      { "rowIndex": 1, "dmgMult": 0.66 },
+      { "rowIndex": 2, "dmgMult": 0.33 }
+    ],
+    "_source": "GIF: column of 3 tiles, damage 195 / 129 / 64 (front→mid→back)"
+  },
+
+  "air_torpedo_strike": {
+    "name": "Unguided Torpedo",
+    "targeting": "tile",
+    "hits": [
+      { "offset": [ 0,  0], "dmgMult": 1.00 },
+      { "offset": [-1,  0], "dmgMult": 0.25 },
+      { "offset": [ 1,  0], "dmgMult": 0.25 },
+      { "offset": [ 0, -1], "dmgMult": 0.25 },
+      { "offset": [ 0,  1], "dmgMult": 0.25 }
+    ],
+    "_source": "GIF: cross/diamond — center 275, 4 orthogonal neighbors 69 each"
+  },
+
+  "air_bomb_drop_rnd": {
+    "name": "Shrapnel Bomb",
+    "targeting": "tile",
+    "hits": [
+      { "offset": [ 0,  0], "hitChance": 0.75, "dmgMult": 1.00 },
+      { "offset": [-1,  0], "hitChance": 0.06, "dmgMult": 1.00 },
+      { "offset": [ 1,  0], "hitChance": 0.06, "dmgMult": 1.00 },
+      { "offset": [ 0, -1], "hitChance": 0.06, "dmgMult": 1.00 },
+      { "offset": [ 0,  1], "hitChance": 0.06, "dmgMult": 1.00 }
+    ],
+    "_source": "One-tile damage; 75% hit chance on primary tile, 6% probabilistic hit on 4 orthogonal neighbours (no diagonals)"
+  },
+
+  "goliath_quad_cannon": {
+    "name": "Total Annihilation",
+    "targeting": "tile",
+    "hits": [
+      { "offset": [0, 0], "dmgMult": 1.00 },
+      { "offset": [0, 1], "dmgMult": 1.00 },
+      { "offset": [1, 0], "dmgMult": 1.00 },
+      { "offset": [1, 1], "dmgMult": 1.00 }
+    ],
+    "_source": "GIF: 2×2 block — 4 tiles all deal 251 damage"
+  },
+
+  "phalanx_gatling_gun": {
+    "name": "Incendiary Burst Rounds (Horizontal)",
+    "targeting": "row",
+    "allColsInRow": true,
+    "dmgMult": 1.00,
+    "_source": "GIF: full horizontal row — all 5 columns deal 204 damage each"
+  },
+
+  "phalanx_gatling_gun_row": {
+    "name": "Incendiary Burst Rounds (Vertical)",
+    "targeting": "column",
+    "hits": [
+      { "rowIndex": 0, "dmgMult": 1.00 },
+      { "rowIndex": 1, "dmgMult": 1.00 },
+      { "rowIndex": 2, "dmgMult": 0.60 }
+    ],
+    "_source": "GIF: column — front 231, mid 272 (primary), back estimated lower"
+  },
+
+  "goliath_mlrs_left": {
+    "name": "Explosive Shell (MLRS Left)",
+    "targeting": "tile",
+    "hits": [
+      { "offset": [-1, -1], "dmgMult": 1.00 },
+      { "offset": [-1,  0], "dmgMult": 1.00 },
+      { "offset": [-1,  1], "dmgMult": 1.00 },
+      { "offset": [ 0, -1], "dmgMult": 1.00 },
+      { "offset": [ 0,  0], "dmgMult": 1.00 },
+      { "offset": [ 0,  1], "dmgMult": 1.00 },
+      { "offset": [ 1, -1], "dmgMult": 1.00 },
+      { "offset": [ 1,  0], "dmgMult": 1.00 },
+      { "offset": [ 1,  1], "dmgMult": 1.00 }
+    ],
+    "_source": "3×3 area centered on target tile — all 9 tiles equal damage"
+  },
+
+  "goliath_mlrs_single": {
+    "name": "Explosive Shell (Anti-Air)",
+    "targeting": "tile",
+    "hits": [
+      { "offset": [0, 0], "dmgMult": 1.00 }
+    ],
+    "_source": "GIF: single target anti-air — 180 damage"
+  },
+
+  "goliath_mlrs_right": {
+    "name": "Explosive Shell (MLRS Right)",
+    "targeting": "absolute",
+    "type": "checkerboard",
+    "parity": 0,
+    "hits": [
+      { "pos": [0, 0], "dmgMult": 1.00 },
+      { "pos": [0, 2], "dmgMult": 1.00 },
+      { "pos": [0, 4], "dmgMult": 1.00 },
+      { "pos": [1, 1], "dmgMult": 1.00 },
+      { "pos": [1, 3], "dmgMult": 1.00 },
+      { "pos": [2, 0], "dmgMult": 1.00 },
+      { "pos": [2, 2], "dmgMult": 1.00 }
+    ],
+    "_source": "GIF: checkerboard pattern (row+col even) — 7 tiles, damage 128–173"
+  }
+}

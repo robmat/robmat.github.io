@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fight Simulator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- Left: Battle View -->
+    <section id="battle-view" class="panel">
+      <h2 class="panel-title">Battle View</h2>
+      <div id="battle-arena"></div>
+      <div id="unit-tray">
+        <div id="tray-items"></div>
+      </div>
+    </section>
+
+    <div id="v-drag" class="resize-handle resize-v" title="Drag to resize"></div>
+
+    <!-- Right column: Controls + Logs -->
+    <div id="right-pane">
+
+      <!-- Top Right: Controls -->
+      <section id="controls" class="panel">
+        <h2 class="panel-title">Controls</h2>
+        <div id="controls-content">
+          <button id="btn-start" class="btn btn-primary" disabled>Start</button>
+          <button id="btn-pause" class="btn" disabled>Pause</button>
+          <button id="btn-next"  class="btn" disabled>Next Turn</button>
+          <button id="btn-reset" class="btn" disabled>Reset</button>
+
+          <label class="ctrl-label" for="goliath-variant">Goliath:</label>
+          <select id="goliath-variant" class="ctrl-select">
+            <option value="repeatable">Repeatable</option>
+            <option value="mission">Mission</option>
+          </select>
+
+          <label class="ctrl-label" for="sim-speed">Speed:</label>
+          <div class="ctrl-speed-row">
+            <input type="range" id="sim-speed" min="0" max="4" value="2" class="ctrl-slider">
+            <span id="speed-label" class="ctrl-speed-label">Normal</span>
+          </div>
+
+          <label class="ctrl-label" for="sim-runs">Runs:</label>
+          <input type="number" id="sim-runs" min="1" max="10000" value="1" class="ctrl-input">
+        </div>
+        <div id="attack-priority"></div>
+      </section>
+
+      <div id="h-drag" class="resize-handle resize-h" title="Drag to resize"></div>
+
+      <!-- Bottom Right: Logs -->
+      <section id="logs" class="panel">
+        <h2 class="panel-title">
+          Battle Log
+          <button id="btn-copy-log" class="btn-icon" title="Copy log to clipboard">📋</button>
+        </h2>
+        <div id="log-output" role="log" aria-live="polite"></div>
+      </section>
+
+    </div><!-- #right-pane -->
+
+  </div>
+
+  <script src="wiki.js"></script>
+  <script src="sim.js"></script>
+  <script src="patterns.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
