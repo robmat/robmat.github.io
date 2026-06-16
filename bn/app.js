@@ -36,14 +36,14 @@
     },
   };
 
-  const TRAY_COUNT = 12;
+  const TRAY_COUNT = () => parseInt(document.getElementById('pelican-count').value) || 13;
 
   function freshBoard() {
     return BOARD_ROWS.map(n => Array(n).fill(null));
   }
 
   function freshTray() {
-    return { pelican: { count: TRAY_COUNT, rank: 1 } };
+    return { pelican: { count: TRAY_COUNT(), rank: 1 } };
   }
 
   function setupAI(board) {
@@ -795,6 +795,16 @@
   }
 
   // ── Button handlers ───────────────────────────────────────────
+  document.getElementById('pelican-count').addEventListener('change', () => {
+    state.tray = freshTray();
+    state.board.p1 = freshBoard();
+    renderBattleView();
+    renderUnitTray();
+    renderAttackPriority();
+    renderControls();
+    logMessage(`Pelican count set to ${TRAY_COUNT()}.`);
+  });
+
   els.goliathVariant.addEventListener('change', () => {
     state.goliathVariant = els.goliathVariant.value;
     state.targetPriority = defaultTargetPriority();
