@@ -146,14 +146,18 @@ window.WikiFetcher = (() => {
     const attackBodies = extractAllTemplatesFromStr(tabberBody, 'UnitAttackBox');
     if (!attackBodies.length) return [];
 
-    return attackBodies.map(attackBody => {
+    // Tab titles (e.g. "Explosive Shell", "Incendiary Burst Rounds") appear in the
+    // attacks= field as <div class="tabbertab" title="NAME"> — one per UnitAttackBox.
+    const tabTitles = [...tabberBody.matchAll(/title="([^"]+)"/g)].map(m => m[1]);
+
+    return attackBodies.map((attackBody, idx) => {
       const atk = parseTemplateArgs(attackBody);
       // damage format: {{Type|min-max}} or {{Type|min-max (xN)}}
       const dmgMatch = (atk.damage || '').match(/\{\{(\w+)\|(\d+)-(\d+)(?:\s*\(x(\d+)\))?\s*\}\}/);
       const rpt      = dmgMatch ? (parseInt(dmgMatch[4]) || 1) : 1;
       const critPct  = parseInt(((atk.crit || '').match(/^(\d+)%/) || [])[1]) || 0;
       return {
-        name:          stripWikiMarkup(atk['game file name'] || '').replace(/_/g, ' '),
+        name:          tabTitles[idx] || stripWikiMarkup(atk['game file name'] || '').replace(/_/g, ' '),
         internalName:  atk['game file name'] || '',
         damageType:    dmgMatch ? dmgMatch[1] : '',
         minDmg:        dmgMatch ? parseInt(dmgMatch[2]) * rpt : 0,
