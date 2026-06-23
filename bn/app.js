@@ -776,7 +776,7 @@
       switch (ev.type) {
         case 'attack':
           logMessage(
-            `${ev.attacker.name} → ${ev.target.name}: ` +
+            `${ev.attacker.name} [${ev.attack.name}] → ${ev.target.name}: ` +
             `${ev.damage} dmg${ev.crit ? ' ✨CRIT' : ''}${ev.killed ? ' ☠' : ''}`,
             ev.turn
           );
