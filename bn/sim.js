@@ -329,10 +329,9 @@ window.SimEngine = (() => {
     _lastCritFlag = Math.random() * 100 < (attack.baseCrit || 0) + critMod;
     if (_lastCritFlag) dmg *= 2;
 
-    // Armor piercing + resistance
+    // Elemental resistance (hp_defense on wiki). AP pierces physical armour, not elemental resistance.
     const res = target.stats.resistances[attack.damageType] ?? 100;
-    const ap  = attack.armorPiercing || 0;
-    dmg = dmg * (ap / 100) + dmg * (1 - ap / 100) * (res / 100);
+    dmg = dmg * (res / 100);
 
     return Math.round(dmg);
   }
