@@ -12,6 +12,12 @@
       img:      'assets/Pelican.png',
       wikiPage: 'SC-2_Pelican',
     },
+    megaTank: {
+      id:       'megaTank',
+      name:     'Mega Tank',
+      img:      'assets/MegaTank.png',
+      wikiPage: 'Mega_Tank',
+    },
   };
 
   // ── Goliath Tank — composite boss with two variants ───────────
@@ -36,14 +42,18 @@
     },
   };
 
-  const TRAY_COUNT = () => parseInt(document.getElementById('pelican-count').value) || 13;
+  const TRAY_COUNT     = () => parseInt(document.getElementById('pelican-count').value)   || 13;
+  const MEGA_TANK_COUNT = () => parseInt(document.getElementById('mega-tank-count').value) || 0;
 
   function freshBoard() {
     return BOARD_ROWS.map(n => Array(n).fill(null));
   }
 
   function freshTray() {
-    return { pelican: { count: TRAY_COUNT(), rank: 1 } };
+    return {
+      pelican:  { count: TRAY_COUNT(),      rank: 1 },
+      megaTank: { count: MEGA_TANK_COUNT(), rank: 1 },
+    };
   }
 
   function setupAI(board) {
@@ -363,7 +373,7 @@
   async function loadUnitStats() {
     // Collect all unique wiki pages to fetch
     const toFetch = [
-      { id: 'pelican', ...UNITS.pelican },
+      ...Object.values(UNITS),
       ...Object.values(GOLIATH_VARIANTS)
         .flatMap(v => v.subUnits),
     ];
@@ -803,6 +813,16 @@
     renderAttackPriority();
     renderControls();
     logMessage(`Pelican count set to ${TRAY_COUNT()}.`);
+  });
+
+  document.getElementById('mega-tank-count').addEventListener('change', () => {
+    state.tray = freshTray();
+    state.board.p1 = freshBoard();
+    renderBattleView();
+    renderUnitTray();
+    renderAttackPriority();
+    renderControls();
+    logMessage(`Mega Tank count set to ${MEGA_TANK_COUNT()}.`);
   });
 
   els.goliathVariant.addEventListener('change', () => {
