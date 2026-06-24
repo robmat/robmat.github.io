@@ -324,6 +324,10 @@ window.SimEngine = (() => {
   function calcDamage(attack, target, attackerRank) {
     let dmg = attack.minDmg + Math.random() * (attack.maxDmg - attack.minDmg);
 
+    // Rank power bonus
+    const power = (attack.power || [])[attackerRank - 1] ?? 0;
+    dmg *= (1 + power / 100);
+
     // Crit
     const critMod = (attack.critMod || [])[attackerRank - 1] ?? 0;
     _lastCritFlag = Math.random() * 100 < (attack.baseCrit || 0) + critMod;
