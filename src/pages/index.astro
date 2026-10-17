@@ -1,0 +1,136 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import GameCard from '../components/GameCard.astro';
+import PlayIcon from '../components/PlayIcon.astro';
+import Rating from '../components/Rating.astro';
+import { games, groups, playUrl, appStoreUrl, PLAY_DEVELOPER_URL, SUPPORT_EMAIL } from '../lib/games';
+
+const featured = games.find((g) => g.featured)!;
+const groupOrder = groups.map((g) => g.id);
+const listed = games
+  .filter((g) => !g.featured)
+  .sort((a, b) => groupOrder.indexOf(a.group) - groupOrder.indexOf(b.group) || (b.votes ?? 0) - (a.votes ?? 0));
+const totalReviews = games.reduce((sum, g) => sum + (g.votes ?? 0), 0);
+const iosCount = games.filter((g) => g.appStore).length;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Emberfox Games',
+  url: Astro.site?.toString(),
+  logo: new URL('/media/emberfox.png', Astro.site).toString(),
+  email: SUPPORT_EMAIL,
+  sameAs: [PLAY_DEVELOPER_URL],
+  makesOffer: games.map((g) => ({
+    '@type': 'Offer',
+    price: 0,
+    priceCurrency: 'USD',
+    itemOffered: {
+      '@type': 'MobileApplication',
+      name: g.name,
+      operatingSystem: g.appStore ? 'Android, iOS' : 'Android',
+      applicationCategory: 'GameApplication',
+      url: playUrl(g.id),
+    },
+  })),
+};
+---
+
+<Base
+  title="Emberfox Games — puzzles, stories and photo apps for Android and iOS"
+  description={`Emberfox Games makes interactive romance stories, picture-reward puzzle games and HD photo and wallpaper apps. ${games.length} apps on Google Play, ${iosCount} on the App Store.`}>
+
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <!-- Hero -->
+  <section class="relative overflow-hidden">
+    <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_60%_at_70%_30%,rgba(242,107,29,.25),transparent_70%)]"></div>
+    <div class="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-14 sm:px-6 lg:grid-cols-2 lg:py-24">
+      <div>
+        <p class="mb-4 text-xs font-semibold uppercase tracking-widest text-ember-400">Indie studio · Android &amp; iOS</p>
+        <h1 class="text-4xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
+          Puzzles, stories and <span class="text-ember-400">pretty pictures</span>.
+        </h1>
+        <p class="mt-5 max-w-xl text-lg text-stone-400">
+          Interactive romance stories, brain-teasing puzzles where every win unlocks a reward, and HD photo &amp; wallpaper apps.
+        </p>
+        <div class="mt-8 flex flex-wrap items-center gap-4">
+          <a href={PLAY_DEVELOPER_URL} data-conversion
+            class="inline-flex items-center gap-3 rounded-xl bg-white px-5 py-3 font-semibold text-ink-900 shadow-lg shadow-black/40 transition hover:-translate-y-0.5">
+            <PlayIcon /> All games on Google Play
+          </a>
+          <a href="#games" class="font-semibold text-stone-300 hover:text-white">Browse games ↓</a>
+        </div>
+        <dl class="mt-10 flex gap-10 text-sm">
+          <div><dt class="text-stone-500">Apps on Google Play</dt><dd class="text-2xl font-extrabold text-white">{games.length}</dd></div>
+          <div><dt class="text-stone-500">Player reviews</dt><dd class="text-2xl font-extrabold text-white">{totalReviews}+</dd></div>
+          <div><dt class="text-stone-500">Also on iOS</dt><dd class="text-2xl font-extrabold text-white">{iosCount}</dd></div>
+        </dl>
+      </div>
+
+      <!-- Featured -->
+      <a href={playUrl(featured.id)} data-conversion
+        class="group block overflow-hidden rounded-3xl bg-ink-800 shadow-2xl shadow-black/50 ring-1 ring-white/10 transition hover:ring-ember-500/60">
+        <div class="relative overflow-hidden">
+          <Image src={featured.bannerImage} alt={`${featured.name} artwork`} widths={[600, 1024]}
+            sizes="(min-width: 1024px) 600px, 100vw" format="webp" quality={80} priority
+            class="aspect-[1024/500] w-full object-cover transition duration-500 group-hover:scale-[1.02]" />
+          <span class="absolute left-4 top-4 rounded-full bg-ember-500 px-3 py-1 text-xs font-bold text-ink-900">Most reviewed</span>
+        </div>
+        <div class="flex items-center gap-4 p-5">
+          <Image src={featured.icon} alt="" width={64} height={64} densities={[1, 2]} format="webp"
+            class="h-16 w-16 rounded-2xl ring-1 ring-white/10" />
+          <div class="min-w-0">
+            <p class="text-xs font-semibold uppercase tracking-wider text-ember-300">{featured.category} · <Rating game={featured} /></p>
+            <p class="text-xl font-extrabold leading-tight text-white">{featured.name}</p>
+            <p class="truncate text-sm text-stone-400">{featured.desc}</p>
+          </div>
+          <span class="ml-auto hidden shrink-0 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold transition group-hover:bg-ember-500 group-hover:text-ink-900 sm:inline-block">Play free</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Games -->
+  <section id="games" class="mx-auto max-w-7xl scroll-mt-20 px-4 pb-20 sm:px-6">
+    <div class="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+      <h2 class="text-3xl font-extrabold tracking-tight text-white">Our games</h2>
+      <div id="filters" class="flex flex-wrap gap-2" role="group" aria-label="Filter by genre">
+        <button type="button" class="chip rounded-full border border-white/15 px-4 py-1.5 text-sm font-semibold transition hover:border-white/40" aria-pressed="true" data-group="">All</button>
+        {groups.map((g) => (
+          <button type="button" class="chip rounded-full border border-white/15 px-4 py-1.5 text-sm font-semibold transition hover:border-white/40" aria-pressed="false" data-group={g.id}>
+            {g.label} <span class="opacity-60">{listed.filter((x) => x.group === g.id).length}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+    <ul id="grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {listed.map((game) => <GameCard game={game} />)}
+    </ul>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="mx-auto max-w-7xl scroll-mt-20 px-4 pb-20 sm:px-6">
+    <div class="flex flex-col justify-between gap-6 rounded-3xl bg-gradient-to-br from-ember-600/30 to-ink-800 p-8 ring-1 ring-white/10 sm:p-12 md:flex-row md:items-center">
+      <div>
+        <h2 class="text-2xl font-extrabold text-white sm:text-3xl">Questions, bugs or ideas?</h2>
+        <p class="mt-2 text-stone-400">Write to us. Playing on iOS? <a href={appStoreUrl('6759834734')} data-conversion class="underline hover:text-white">Arrows Untangle</a> and <a href={appStoreUrl('6804949462')} data-conversion class="underline hover:text-white">Screw Sort Puzzle</a> are on the App Store too.</p>
+      </div>
+      <a href={`mailto:${SUPPORT_EMAIL}`} data-conversion
+        class="shrink-0 rounded-xl bg-white px-6 py-3 font-semibold text-ink-900 transition hover:-translate-y-0.5">{SUPPORT_EMAIL}</a>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const filters = document.getElementById('filters')!;
+  const cards = document.querySelectorAll<HTMLElement>('#grid > li');
+  filters.addEventListener('click', (e) => {
+    const button = (e.target as HTMLElement).closest('button');
+    if (!button) return;
+    filters.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+    const group = button.dataset.group;
+    cards.forEach((card) => (card.hidden = !!group && card.dataset.group !== group));
+  });
+</script>

@@ -1,0 +1,12 @@
+---
+import type { Game } from '../lib/games';
+
+type Props = { game: Game };
+const { game } = Astro.props;
+---
+
+{game.rating && (
+  <span aria-label={`Rated ${game.rating.toFixed(1)} out of 5 by ${game.votes} players`}>
+    <span class="text-ember-300">★ {game.rating.toFixed(1)}</span><span class="text-stone-500"> ({game.votes})</span>
+  </span>
+)}

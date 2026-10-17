@@ -1,0 +1,35 @@
+---
+import { Image } from 'astro:assets';
+import { appStoreUrl, playUrl, type GameWithImages } from '../lib/games';
+import Rating from './Rating.astro';
+
+type Props = { game: GameWithImages };
+const { game } = Astro.props;
+---
+
+<li data-group={game.group}
+  class="group relative flex flex-col overflow-hidden rounded-2xl bg-ink-800 ring-1 ring-white/5 transition duration-300 hover:-translate-y-1 hover:ring-ember-500/50">
+  <div class="overflow-hidden">
+    <Image src={game.bannerImage} alt={`${game.name} artwork`} widths={[400, 800]}
+      sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw" format="webp" quality={75}
+      class="aspect-[1024/500] w-full object-cover transition duration-500 group-hover:scale-105" />
+  </div>
+  <div class="flex flex-1 gap-3 p-4">
+    <Image src={game.icon} alt="" width={56} height={56} densities={[1, 2]} format="webp"
+      class="-mt-11 h-14 w-14 shrink-0 rounded-xl shadow-lg shadow-black/50 ring-1 ring-white/10" />
+    <div class="min-w-0 flex-1">
+      <h3 class="font-semibold leading-tight text-white">
+        <a href={playUrl(game.id)} data-conversion class="after:absolute after:inset-0">{game.name}</a>
+      </h3>
+      <p class="mt-1 line-clamp-2 text-sm text-stone-400">{game.desc}</p>
+      <p class="mt-2 flex items-center gap-2 text-xs">
+        <span class="text-stone-500">{game.category}</span>
+        <Rating game={game} />
+        {game.appStore && (
+          <a href={appStoreUrl(game.appStore)} data-conversion
+            class="relative z-10 rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-semibold text-stone-200 hover:bg-white/20">iOS</a>
+        )}
+      </p>
+    </div>
+  </div>
+</li>

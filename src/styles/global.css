@@ -1,0 +1,29 @@
+@import "@fontsource-variable/outfit";
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit Variable", ui-sans-serif, system-ui, sans-serif;
+
+  --color-ink-950: #0c0a09;
+  --color-ink-900: #120f0d;
+  --color-ink-800: #1c1714;
+  --color-ink-700: #2a221d;
+
+  --color-ember-300: #ffb27a;
+  --color-ember-400: #ff8a3d;
+  --color-ember-500: #f26b1d;
+  --color-ember-600: #d1540c;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+}
+
+.chip[aria-pressed="true"] {
+  background: var(--color-ember-500);
+  border-color: var(--color-ember-500);
+  color: var(--color-ink-900);
+}
