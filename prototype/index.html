@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Emberfox Games — casual games for Android</title>
+  <meta name="description" content="Emberfox Games: interactive romance stories, picture-reward puzzle games and HD photo and wallpaper apps. 37 apps on Google Play, 2 on the App Store.">
+  <meta property="og:title" content="Emberfox Games">
+  <meta property="og:description" content="Interactive stories, puzzle games and photo apps for Android and iOS.">
+  <meta property="og:image" content="../media/emberfox.png">
+  <meta name="theme-color" content="#120f0d">
+  <link rel="icon" type="image/x-icon" href="../media/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Outfit', 'system-ui', 'sans-serif'] },
+          colors: {
+            ink: { 950: '#0c0a09', 900: '#120f0d', 800: '#1c1714', 700: '#2a221d' },
+            ember: { 300: '#ffb27a', 400: '#ff8a3d', 500: '#f26b1d', 600: '#d1540c' },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    .chip[aria-pressed="true"] { background: #f26b1d; color: #120f0d; border-color: #f26b1d; }
+    .glow { background: radial-gradient(60% 60% at 70% 30%, rgba(242, 107, 29, .25), transparent 70%); }
+  </style>
+</head>
+
+<body class="bg-ink-900 text-stone-200 font-sans antialiased">
+
+  <!-- Nav -->
+  <header class="sticky top-0 z-40 backdrop-blur bg-ink-900/80 border-b border-white/5">
+    <nav class="mx-auto max-w-7xl px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-3">
+        <img src="../media/emberfox.png" alt="" class="h-9 w-9 rounded-lg">
+        <span class="font-extrabold tracking-tight text-white">Emberfox<span class="text-ember-400"> Games</span></span>
+      </a>
+      <div class="flex items-center gap-1 sm:gap-6 text-sm">
+        <a href="#games" class="hidden sm:inline hover:text-white">Games</a>
+        <a href="../support.html" class="hidden sm:inline hover:text-white">Support</a>
+        <a href="#contact" class="hidden sm:inline hover:text-white">Contact</a>
+        <a href="https://play.google.com/store/apps/dev?id=8228670503574649511"
+          class="rounded-full bg-ember-500 px-4 py-2 font-semibold text-ink-900 hover:bg-ember-400 transition">Google Play</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="relative overflow-hidden">
+      <div class="glow absolute inset-0 pointer-events-none"></div>
+      <div class="relative mx-auto max-w-7xl px-4 sm:px-6 py-14 lg:py-24 grid lg:grid-cols-2 gap-10 items-center">
+        <div>
+          <p class="text-ember-400 font-semibold uppercase tracking-widest text-xs mb-4">Indie studio · Android &amp; iOS</p>
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[1.05] tracking-tight">
+            Puzzles, stories and <span class="text-ember-400">pretty pictures</span>.
+          </h1>
+          <p class="mt-5 text-lg text-stone-400 max-w-xl">
+            Interactive romance stories, brain-teasing puzzles where every win unlocks a reward, and HD photo &amp; wallpaper apps.
+          </p>
+          <div class="mt-8 flex flex-wrap items-center gap-4">
+            <a href="https://play.google.com/store/apps/dev?id=8228670503574649511"
+              class="inline-flex items-center gap-3 rounded-xl bg-white px-5 py-3 text-ink-900 font-semibold shadow-lg shadow-black/40 hover:-translate-y-0.5 transition">
+              <svg aria-hidden="true" viewBox="0 0 40 40" class="h-6 w-6"><path d="M19.7,19.2L4.3,35.3c.5,1.7,2.1,3,4,3c.8,0,1.5-.2,2.1-.6l17.4-9.9L19.7,19.2z" fill="#EA4335"/><path d="M35.3,16.4l-7.5-4.3l-8.4,7.4l8.5,8.3l7.5-4.2c1.3-.7,2.2-2.1,2.2-3.6C37.5,18.5,36.6,17.1,35.3,16.4z" fill="#FBBC04"/><path d="M4.3,4.7C4.2,5,4.2,5.4,4.2,5.8v28.5c0,.4,0,.7.1,1.1l16-15.7L4.3,4.7z" fill="#4285F4"/><path d="M19.8,20l8-7.9L10.5,2.3C9.9,1.9,9.1,1.7,8.3,1.7c-1.9,0-3.6,1.3-4,3L19.8,20z" fill="#34A853"/></svg>
+              All games on Google Play
+            </a>
+            <a href="#games" class="text-stone-300 hover:text-white font-semibold">Browse games ↓</a>
+          </div>
+          <dl class="mt-10 flex gap-10 text-sm">
+            <div><dt class="text-stone-500">Apps on Google Play</dt><dd class="text-2xl font-extrabold text-white" id="stat-count">–</dd></div>
+            <div><dt class="text-stone-500">Player reviews</dt><dd class="text-2xl font-extrabold text-white" id="stat-reviews">–</dd></div>
+            <div><dt class="text-stone-500">Also on iOS</dt><dd class="text-2xl font-extrabold text-white" id="stat-ios">–</dd></div>
+          </dl>
+        </div>
+
+        <!-- Featured -->
+        <a id="featured" class="group block rounded-3xl bg-ink-800 ring-1 ring-white/10 overflow-hidden shadow-2xl shadow-black/50 hover:ring-ember-500/60 transition">
+        </a>
+      </div>
+    </section>
+
+    <!-- Games -->
+    <section id="games" class="mx-auto max-w-7xl px-4 sm:px-6 pb-20">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+        <h2 class="text-3xl font-extrabold text-white tracking-tight">Our games</h2>
+        <div id="filters" class="flex flex-wrap gap-2" role="group" aria-label="Filter by genre"></div>
+      </div>
+      <ul id="grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></ul>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="mx-auto max-w-7xl px-4 sm:px-6 pb-20">
+      <div class="rounded-3xl bg-gradient-to-br from-ember-600/30 to-ink-800 ring-1 ring-white/10 p-8 sm:p-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Questions, bugs or ideas?</h2>
+          <p class="text-stone-400 mt-2">We read every message and usually reply within a few days.</p>
+        </div>
+        <a href="mailto:support@emberfox.online"
+          class="rounded-xl bg-white px-6 py-3 font-semibold text-ink-900 hover:-translate-y-0.5 transition">support@emberfox.online</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-white/5">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 py-8 flex flex-col sm:flex-row gap-4 justify-between text-sm text-stone-500">
+      <p>© 2026 Emberfox Games</p>
+      <div class="flex gap-6">
+        <a href="../support.html" class="hover:text-stone-300">Support</a>
+        <a href="../privacy_policy.html" class="hover:text-stone-300">Privacy policy</a>
+        <a href="#" onclick="openConsent();return false" class="hover:text-stone-300">Cookie settings</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Consent: equal-weight accept / reject -->
+  <div id="consent" hidden
+    class="fixed bottom-4 inset-x-4 sm:left-auto sm:right-4 sm:max-w-sm z-50 rounded-2xl bg-ink-800 ring-1 ring-white/10 p-5 shadow-2xl shadow-black/60">
+    <p class="text-sm text-stone-300">We use cookies to measure which games people are interested in. <a href="../privacy_policy.html" class="underline">Privacy policy</a></p>
+    <div class="mt-4 grid grid-cols-2 gap-2">
+      <button onclick="setConsent(false)" class="rounded-lg ring-1 ring-white/20 py-2 font-semibold hover:bg-white/5">Reject</button>
+      <button onclick="setConsent(true)" class="rounded-lg bg-ember-500 py-2 font-semibold text-ink-900 hover:bg-ember-400">Accept</button>
+    </div>
+  </div>
+
+  <script>
+    const play = id => `https://play.google.com/store/apps/details?id=${id}`;
+    const appStore = id => `https://apps.apple.com/app/id${id}`;
+    const media = (g, f) => `../media/${encodeURIComponent(g.media)}/${f}`;
+    const banner = g => media(g, g.banner || 'play_store_graphic.png');
+    const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const stars = g => g.rating ? `<span class="text-ember-300">★ ${g.rating.toFixed(1)}</span><span class="text-stone-500"> (${g.votes})</span>` : '';
+    const iosBadge = g => g.appStore ? `<a href="${appStore(g.appStore)}" class="relative z-10 rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-semibold text-stone-200 hover:bg-white/20">iOS</a>` : '';
+
+    fetch('../data/games.json').then(r => r.json()).then(({ groups, games }) => {
+      const groupLabel = Object.fromEntries(groups.map(g => [g.id, g.label]));
+      document.getElementById('stat-count').textContent = games.length;
+      document.getElementById('stat-reviews').textContent = games.reduce((s, g) => s + (g.votes || 0), 0) + '+';
+      document.getElementById('stat-ios').textContent = games.filter(g => g.appStore).length;
+
+      const f = games.find(g => g.featured);
+      const featured = document.getElementById('featured');
+      featured.href = play(f.id);
+      featured.innerHTML = `
+        <div class="relative">
+          <img src="${banner(f)}" alt="${esc(f.name)} artwork" width="1024" height="500" fetchpriority="high"
+            class="w-full aspect-[1024/500] object-cover group-hover:scale-[1.02] transition duration-500">
+          <span class="absolute top-4 left-4 rounded-full bg-ember-500 text-ink-900 text-xs font-bold px-3 py-1">Most reviewed</span>
+        </div>
+        <div class="flex items-center gap-4 p-5">
+          <img src="${media(f, 'launcher.png')}" alt="" width="64" height="64" class="h-16 w-16 rounded-2xl ring-1 ring-white/10">
+          <div class="min-w-0">
+            <p class="text-xs text-ember-300 font-semibold uppercase tracking-wider">${f.category} · ${stars(f)}</p>
+            <p class="text-xl font-extrabold text-white leading-tight">${esc(f.name)}</p>
+            <p class="text-sm text-stone-400 truncate">${esc(f.desc)}</p>
+          </div>
+          <span class="hidden sm:inline-block ml-auto shrink-0 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold group-hover:bg-ember-500 group-hover:text-ink-900 transition">Play free</span>
+        </div>`;
+
+      const grid = document.getElementById('grid');
+      const order = groups.map(g => g.id);
+      grid.innerHTML = games.filter(g => !g.featured)
+        .sort((a, b) => order.indexOf(a.group) - order.indexOf(b.group) || (b.votes || 0) - (a.votes || 0))
+        .map(g => `
+        <li data-group="${g.group}" class="relative group flex flex-col rounded-2xl bg-ink-800 ring-1 ring-white/5 overflow-hidden hover:ring-ember-500/50 hover:-translate-y-1 transition duration-300">
+          <div class="overflow-hidden">
+            <img src="${banner(g)}" alt="${esc(g.name)} artwork" loading="lazy" decoding="async" width="1024" height="500"
+              class="w-full aspect-[1024/500] object-cover group-hover:scale-105 transition duration-500">
+          </div>
+          <div class="flex gap-3 p-4 flex-1">
+            <img src="${media(g, 'launcher.png')}" alt="" loading="lazy" width="56" height="56" class="h-14 w-14 shrink-0 rounded-xl ring-1 ring-white/10 -mt-11 shadow-lg shadow-black/50">
+            <div class="min-w-0 flex-1">
+              <h3 class="font-semibold text-white leading-tight"><a href="${play(g.id)}" class="after:absolute after:inset-0">${esc(g.name)}</a></h3>
+              <p class="mt-1 text-sm text-stone-400 line-clamp-2">${esc(g.desc)}</p>
+              <p class="mt-2 flex items-center gap-2 text-xs"><span class="text-stone-500">${g.category}</span>${stars(g)}${iosBadge(g)}</p>
+            </div>
+          </div>
+        </li>`).join('');
+
+      const filters = document.getElementById('filters');
+      const counts = id => games.filter(g => !g.featured && g.group === id).length;
+      filters.innerHTML = [`<button class="chip rounded-full border border-white/15 px-4 py-1.5 text-sm font-semibold hover:border-white/40 transition" aria-pressed="true" data-group="">All</button>`]
+        .concat(groups.map(g => `<button class="chip rounded-full border border-white/15 px-4 py-1.5 text-sm font-semibold hover:border-white/40 transition" aria-pressed="false" data-group="${g.id}">${esc(g.label)} <span class="opacity-60">${counts(g.id)}</span></button>`)).join('');
+      filters.addEventListener('click', e => {
+        const b = e.target.closest('button'); if (!b) return;
+        filters.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+        grid.querySelectorAll('li').forEach(li => li.hidden = !!b.dataset.group && li.dataset.group !== b.dataset.group);
+      });
+    });
+
+    function openConsent() { document.getElementById('consent').hidden = false; }
+    function setConsent(ok) {
+      try { localStorage.setItem('consent', ok ? 'granted' : 'denied'); } catch (e) { }
+      document.getElementById('consent').hidden = true;
+    }
+    try { if (!localStorage.getItem('consent')) openConsent(); } catch (e) { openConsent(); }
+  </script>
+</body>
+
+</html>
