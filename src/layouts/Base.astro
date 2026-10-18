@@ -4,7 +4,8 @@ import { PLAY_DEVELOPER_URL } from '../lib/games';
 
 type Props = { title: string; description: string };
 const { title, description } = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.site);
+// build.format 'file' makes the home page /index.html; the canonical form is /.
+const canonical = new URL(Astro.url.pathname.replace(/(^|\/)index(\.html)?$/, '$1'), Astro.site);
 const ogImage = new URL('/media/emberfox.png', Astro.site);
 ---
 
@@ -16,7 +17,7 @@ const ogImage = new URL('/media/emberfox.png', Astro.site);
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content="#120f0d" />
+    <meta name="theme-color" content="#0a0807" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Emberfox Games" />
@@ -25,6 +26,7 @@ const ogImage = new URL('/media/emberfox.png', Astro.site);
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
 
     <!-- Google Ads with Consent Mode v2. Everything defaults to denied until the visitor accepts. -->
     <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=AW-959467352"></script>
@@ -79,20 +81,26 @@ const ogImage = new URL('/media/emberfox.png', Astro.site);
     </script>
   </head>
 
-  <body class="bg-ink-900 font-sans text-stone-200 antialiased">
-    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-ink-900">Skip to content</a>
+  <body class="bg-ink-950 font-sans text-stone-300 antialiased">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[90] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-ink-900">Skip to content</a>
+    <div class="progress" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
 
-    <header class="sticky top-0 z-40 border-b border-white/5 bg-ink-900/80 backdrop-blur">
-      <nav class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6" aria-label="Main">
-        <a href="/" class="flex items-center gap-3">
-          <img src="/media/emberfox.png" alt="" width="36" height="36" class="h-9 w-9 rounded-lg" />
-          <span class="font-extrabold tracking-tight text-white">Emberfox<span class="text-ember-400"> Games</span></span>
+    <header class="site-header group/header fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-6 sm:pt-4">
+      <nav class="mx-auto flex h-14 max-w-6xl items-center justify-between rounded-full border border-white/10 bg-ink-950/55 pl-2 pr-2 shadow-[0_10px_40px_-10px_rgb(0_0_0/0.8)] backdrop-blur-xl backdrop-saturate-150 sm:pl-3" aria-label="Main">
+        <a href="/" class="group flex items-center gap-2.5 rounded-full pr-3">
+          <img src="/media/emberfox.png" alt="" width="40" height="40" class="h-10 w-10 rounded-full ring-1 ring-white/10 transition duration-500 group-hover:rotate-[-8deg] group-hover:scale-110" />
+          <span class="text-[1.05rem] font-bold tracking-tight text-white">Emberfox<span class="font-serif text-lg font-normal italic text-ember-300"> games</span></span>
         </a>
-        <div class="flex items-center gap-1 text-sm sm:gap-6">
-          <a href="/#games" class="hidden hover:text-white sm:inline">Games</a>
-          <a href="/support.html" class="hidden hover:text-white sm:inline">Support</a>
-          <a href="/#contact" class="hidden hover:text-white sm:inline">Contact</a>
-          <a href={PLAY_DEVELOPER_URL} data-conversion class="rounded-full bg-ember-500 px-4 py-2 font-semibold text-ink-900 transition hover:bg-ember-400">Google Play</a>
+        <div class="flex items-center gap-1 text-sm font-medium">
+          <a href="/#games" class="hidden rounded-full px-4 py-2 text-stone-300 transition hover:bg-white/5 hover:text-white md:inline">Games</a>
+          <a href="/#iphone" class="hidden rounded-full px-4 py-2 text-stone-300 transition hover:bg-white/5 hover:text-white md:inline">iPhone</a>
+          <a href="/support.html" class="hidden rounded-full px-4 py-2 text-stone-300 transition hover:bg-white/5 hover:text-white md:inline">Support</a>
+          <a href="/#contact" class="hidden rounded-full px-4 py-2 text-stone-300 transition hover:bg-white/5 hover:text-white sm:inline">Contact</a>
+          <a href={PLAY_DEVELOPER_URL} data-conversion data-magnetic="0.25"
+            class="ml-1 inline-flex items-center gap-2 rounded-full bg-ember-500 px-4 py-2 font-semibold text-ink-950 shadow-[0_0_24px_-4px_var(--color-ember-500)] transition-colors hover:bg-ember-400">
+            <span data-magnetic-inner>Google Play</span>
+          </a>
         </div>
       </nav>
     </header>
@@ -101,30 +109,41 @@ const ogImage = new URL('/media/emberfox.png', Astro.site);
       <slot />
     </main>
 
-    <footer class="border-t border-white/5">
-      <div class="mx-auto flex max-w-7xl flex-col justify-between gap-4 px-4 py-8 text-sm text-stone-500 sm:flex-row sm:px-6">
-        <p>© {new Date().getFullYear()} Emberfox Games</p>
-        <div class="flex gap-6">
-          <a href="/support.html" class="hover:text-stone-300">Support</a>
-          <a href="/privacy_policy.html" class="hover:text-stone-300">Privacy policy</a>
-          <button type="button" data-open-consent class="hover:text-stone-300">Cookie settings</button>
+    <footer class="relative overflow-hidden border-t border-white/5 pt-16">
+      <div class="mx-auto flex max-w-7xl flex-col justify-between gap-8 px-4 sm:flex-row sm:px-6">
+        <div class="max-w-sm">
+          <p class="text-lg font-semibold text-white">Emberfox Games</p>
+          <p class="mt-2 text-sm text-stone-500">Indie puzzles, stories and photo apps for Android and iOS.</p>
+        </div>
+        <div class="flex flex-wrap gap-x-8 gap-y-3 text-sm">
+          <a href="/#games" class="text-stone-400 transition hover:text-white">Games</a>
+          <a href="/support.html" class="text-stone-400 transition hover:text-white">Support</a>
+          <a href="/privacy_policy.html" class="text-stone-400 transition hover:text-white">Privacy policy</a>
+          <button type="button" data-open-consent class="text-stone-400 transition hover:text-white">Cookie settings</button>
+          <a href={PLAY_DEVELOPER_URL} data-conversion class="text-stone-400 transition hover:text-white">Google Play ↗</a>
         </div>
       </div>
+      <div class="mt-10 select-none px-2" aria-hidden="true">
+        <p class="wordmark text-center text-[clamp(4rem,19vw,19rem)] leading-[0.8] tracking-[-0.04em]">{[...'EMBERFOX'].map((c) => <span>{c}</span>)}</p>
+      </div>
+      <p class="mx-auto max-w-7xl px-4 pb-6 pt-4 text-xs text-stone-600 sm:px-6">© {new Date().getFullYear()} Emberfox Games. All game art belongs to its respective games.</p>
     </footer>
 
     <div id="consent" hidden role="dialog" aria-label="Cookie consent"
-      class="fixed inset-x-4 bottom-4 z-50 rounded-2xl bg-ink-800 p-5 shadow-2xl shadow-black/60 ring-1 ring-white/10 sm:left-auto sm:right-4 sm:max-w-sm">
+      class="fixed inset-x-4 bottom-4 z-[75] rounded-2xl border border-white/10 bg-ink-900/85 p-5 shadow-2xl shadow-black/60 backdrop-blur-xl sm:left-auto sm:right-4 sm:max-w-sm">
       <p class="text-sm text-stone-300">
         We use cookies to measure which games people are interested in.
         <a href="/privacy_policy.html" class="underline">Privacy policy</a>
       </p>
       <div class="mt-4 grid grid-cols-2 gap-2">
-        <button type="button" data-consent="denied" class="rounded-lg py-2 font-semibold ring-1 ring-white/20 hover:bg-white/5">Reject</button>
-        <button type="button" data-consent="granted" class="rounded-lg bg-ember-500 py-2 font-semibold text-ink-900 hover:bg-ember-400">Accept</button>
+        <button type="button" data-consent="denied" class="rounded-full py-2 font-semibold ring-1 ring-white/20 transition hover:bg-white/5">Reject</button>
+        <button type="button" data-consent="granted" class="rounded-full bg-ember-500 py-2 font-semibold text-ink-950 transition hover:bg-ember-400">Accept</button>
       </div>
     </div>
 
     <script>
+      import '../scripts/fx';
+
       const banner = document.getElementById('consent')!;
       const consent = (window as any).emberfoxConsent;
       if (!consent.read()) banner.hidden = false;

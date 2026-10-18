@@ -3,33 +3,36 @@ import { Image } from 'astro:assets';
 import { appStoreUrl, playUrl, type GameWithImages } from '../lib/games';
 import Rating from './Rating.astro';
 
-type Props = { game: GameWithImages };
-const { game } = Astro.props;
+type Props = { game: GameWithImages; index: number };
+const { game, index } = Astro.props;
 ---
 
-<li data-group={game.group}
-  class="group relative flex flex-col overflow-hidden rounded-2xl bg-ink-800 ring-1 ring-white/5 transition duration-300 hover:-translate-y-1 hover:ring-ember-500/50">
-  <div class="overflow-hidden">
-    <Image src={game.bannerImage} alt={`${game.name} artwork`} widths={[400, 800]}
-      sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw" format="webp" quality={75}
-      class="aspect-[1024/500] w-full object-cover transition duration-500 group-hover:scale-105" />
-  </div>
-  <div class="flex flex-1 gap-3 p-4">
-    <Image src={game.icon} alt="" width={56} height={56} densities={[1, 2]} format="webp"
-      class="-mt-11 h-14 w-14 shrink-0 rounded-xl shadow-lg shadow-black/50 ring-1 ring-white/10" />
-    <div class="min-w-0 flex-1">
-      <h3 class="font-semibold leading-tight text-white">
-        <a href={playUrl(game.id)} data-conversion class="after:absolute after:inset-0">{game.name}</a>
-      </h3>
-      <p class="mt-1 line-clamp-2 text-sm text-stone-400">{game.desc}</p>
-      <p class="mt-2 flex items-center gap-2 text-xs">
-        <span class="text-stone-500">{game.category}</span>
-        <Rating game={game} />
-        {game.appStore && (
-          <a href={appStoreUrl(game.appStore)} data-conversion
-            class="relative z-10 rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-semibold text-stone-200 hover:bg-white/20">iOS</a>
-        )}
-      </p>
+<li data-group={game.group} style={`view-transition-name: game-${index}; --d:${(index % 3) * 80}ms`} class="reveal">
+  <div class="spot tilt group relative flex h-full flex-col overflow-hidden rounded-3xl bg-ink-800/80 ring-1 ring-white/[0.07] transition-shadow duration-500 hover:shadow-[0_30px_80px_-30px_rgb(242_107_29/0.5)]"
+    data-cursor="Play">
+    <div class="relative overflow-hidden">
+      <Image src={game.bannerImage} alt={`${game.name} artwork`} widths={[400, 800]}
+        sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw" format="webp" quality={75}
+        class="aspect-[1024/500] w-full object-cover transition duration-[1.2s] ease-[var(--ease-out-expo)] group-hover:scale-[1.07]" />
+      <div class="absolute inset-0 bg-gradient-to-t from-ink-800 via-transparent to-transparent opacity-90"></div>
+    </div>
+    <div class="relative flex flex-1 gap-4 p-5 pt-0">
+      <Image src={game.icon} alt="" width={64} height={64} densities={[1, 2]} format="webp"
+        class="-mt-8 h-16 w-16 shrink-0 rounded-2xl shadow-xl shadow-black/60 ring-1 ring-white/15 transition duration-500 ease-[var(--ease-out-expo)] group-hover:-translate-y-1.5 group-hover:-rotate-6" />
+      <div class="min-w-0 flex-1 pt-3">
+        <h3 class="text-lg font-semibold leading-tight tracking-tight text-white">
+          <a href={playUrl(game.id)} data-conversion class="after:absolute after:inset-0 after:z-[3] focus-visible:outline-none focus-visible:after:rounded-3xl focus-visible:after:ring-2 focus-visible:after:ring-ember-400">{game.name}</a>
+        </h3>
+        <p class="mt-1.5 line-clamp-2 text-sm leading-relaxed text-stone-400">{game.desc}</p>
+        <p class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+          <span class="rounded-full bg-white/5 px-2.5 py-1 text-stone-400 ring-1 ring-white/10">{game.category}</span>
+          <Rating game={game} />
+          {game.appStore && (
+            <a href={appStoreUrl(game.appStore)} data-conversion data-cursor="iOS"
+              class="relative z-[4] rounded-full bg-white px-2.5 py-1 text-[11px] font-bold text-ink-950 transition hover:bg-ember-200">iPhone</a>
+          )}
+        </p>
+      </div>
     </div>
   </div>
 </li>

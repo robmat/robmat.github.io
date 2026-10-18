@@ -1,0 +1,123 @@
+---
+import { Image } from 'astro:assets';
+import PlayIcon from './PlayIcon.astro';
+import { games, PLAY_DEVELOPER_URL } from '../lib/games';
+
+const COLUMNS = 5;
+const PER_COLUMN = 6;
+// Deal the games round-robin so every column mixes stories, puzzles and photos.
+const columns = Array.from({ length: COLUMNS }, (_, c) =>
+  games.filter((_, i) => i % COLUMNS === c).slice(0, PER_COLUMN),
+);
+
+const totalReviews = games.reduce((sum, g) => sum + (g.votes ?? 0), 0);
+const iosCount = games.filter((g) => g.appStore).length;
+const plain = ['Puzzles,', 'stories', 'and'];
+const fancy = ['pretty', 'pictures.'];
+---
+
+<section class="hero relative isolate flex min-h-[100svh] items-center overflow-hidden pb-16 pt-28" data-hero>
+  <div class="hero-glow absolute inset-0 -z-30"></div>
+
+  <!-- Poster wall -->
+  <div class="wall absolute inset-0 -z-20 opacity-45 lg:opacity-100" aria-hidden="true">
+    <div class="wall-plane absolute -left-[20%] -top-[40%] grid h-[180%] w-[150%] grid-cols-5 gap-3 sm:left-[10%] sm:w-[110%] sm:gap-4 lg:left-[40%] lg:w-[80%]">
+      {columns.map((column, i) => (
+        <div class={`wall-track flex flex-col gap-3 sm:gap-4 ${i % 2 ? 'reverse' : ''}`} style={`--dur:${70 + i * 11}s`}>
+          {[...column, ...column].map((game) => (
+            <Image src={game.bannerImage} alt="" width={320} height={400} fit="cover" format="webp" quality={68}
+              loading="eager" fetchpriority="low"
+              class="aspect-[4/5] w-full rounded-2xl object-cover shadow-2xl shadow-black/70 ring-1 ring-white/10" />
+          ))}
+        </div>
+      ))}
+    </div>
+  </div>
+  <div class="absolute inset-0 -z-10 bg-ink-950/60 lg:bg-[linear-gradient(90deg,var(--color-ink-950)_0%,var(--color-ink-950)_30%,rgb(10_8_7/0.75)_48%,transparent_75%)]"></div>
+  <div class="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-ink-950 to-transparent"></div>
+
+  <canvas data-embers class="pointer-events-none absolute inset-0 -z-[5] h-full w-full" aria-hidden="true"></canvas>
+
+  <div class="mx-auto w-full max-w-7xl px-4 sm:px-6">
+    <div class="max-w-3xl">
+      <p class="fade-up inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 py-1.5 pl-3 pr-4 text-xs font-medium text-stone-300 backdrop-blur" style="--d:50ms">
+        <span class="live-dot h-2 w-2 rounded-full bg-emerald-400"></span>
+        {games.length} games live on Google Play · {iosCount} on iPhone
+      </p>
+
+      <h1 class="mt-7 text-[clamp(3.1rem,8.5vw,7.6rem)] font-bold leading-[0.9] tracking-[-0.045em] text-white">
+        {plain.map((w, i) => <><span class="word" style={`--i:${i}`}>{w}</span>{' '}</>)}
+        <br class="hidden sm:block" />
+        {fancy.map((w, i) => (
+          <><span class="word font-serif font-normal italic tracking-[-0.02em]" style={`--i:${i + plain.length}`}><span class="text-ember-gradient pr-[0.08em]">{w}</span></span>{' '}</>
+        ))}
+      </h1>
+
+      <p class="fade-up mt-7 max-w-xl text-lg leading-relaxed text-stone-400 sm:text-xl" style="--d:600ms">
+        Interactive romance stories, brain-teasing puzzles where every win unlocks a reward, and HD photo &amp; wallpaper apps.
+      </p>
+
+      <div class="fade-up mt-10 flex flex-wrap items-center gap-3" style="--d:750ms">
+        <a href={PLAY_DEVELOPER_URL} data-conversion data-magnetic="0.3"
+          class="inline-flex items-center gap-3 rounded-full bg-white py-3.5 pl-4 pr-6 font-semibold text-ink-950 shadow-[0_20px_50px_-15px_rgb(255_138_61/0.6)] transition-colors hover:bg-ember-200">
+          <span data-magnetic-inner class="inline-flex items-center gap-3"><PlayIcon /> All games on Google Play</span>
+        </a>
+        <a href="#games" data-magnetic="0.3"
+          class="group inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3.5 font-semibold text-white backdrop-blur transition-colors hover:border-white/30 hover:bg-white/10">
+          <span data-magnetic-inner>Browse games <span class="inline-block transition-transform duration-300 group-hover:translate-y-0.5">↓</span></span>
+        </a>
+      </div>
+
+      <dl class="fade-up mt-14 grid max-w-lg grid-cols-3 divide-x divide-white/10" style="--d:900ms">
+        <div class="pr-4">
+          <dd class="text-3xl font-bold tracking-tight text-white sm:text-4xl" data-count={games.length}>{games.length}</dd>
+          <dt class="mt-1 text-xs uppercase tracking-wider text-stone-500">Games</dt>
+        </div>
+        <div class="px-4 sm:px-6">
+          <dd class="text-3xl font-bold tracking-tight text-white sm:text-4xl" data-count={totalReviews} data-suffix="+">{totalReviews}+</dd>
+          <dt class="mt-1 text-xs uppercase tracking-wider text-stone-500">Player reviews</dt>
+        </div>
+        <div class="pl-4 sm:pl-6">
+          <dd class="text-3xl font-bold tracking-tight text-white sm:text-4xl" data-count={iosCount}>{iosCount}</dd>
+          <dt class="mt-1 text-xs uppercase tracking-wider text-stone-500">On iPhone</dt>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <a href="#games" class="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-stone-500 transition hover:text-stone-300 sm:flex" aria-label="Scroll to games">
+    <span class="flex h-9 w-5 justify-center rounded-full border border-white/20 pt-1.5"><span class="h-2 w-0.5 animate-bounce rounded-full bg-ember-400"></span></span>
+    Scroll
+  </a>
+</section>
+
+<script>
+  import { startEmbers } from '../scripts/embers';
+
+  const hero = document.querySelector<HTMLElement>('[data-hero]')!;
+  startEmbers(hero.querySelector('canvas')!, hero);
+
+  // The poster wall leans toward the pointer and the glow follows it, both eased.
+  if (matchMedia('(hover: hover) and (pointer: fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let tx = 0, ty = 0, x = 0, y = 0, gx = 70, gy = 40, tgx = 70, tgy = 40;
+    hero.addEventListener('pointermove', (e) => {
+      const r = hero.getBoundingClientRect();
+      tx = (e.clientX - r.left) / r.width - 0.5;
+      ty = (e.clientY - r.top) / r.height - 0.5;
+      tgx = ((e.clientX - r.left) / r.width) * 100;
+      tgy = ((e.clientY - r.top) / r.height) * 100;
+    });
+    const loop = () => {
+      x += (tx - x) * 0.06;
+      y += (ty - y) * 0.06;
+      gx += (tgx - gx) * 0.08;
+      gy += (tgy - gy) * 0.08;
+      hero.style.setProperty('--mx', x.toFixed(4));
+      hero.style.setProperty('--my', y.toFixed(4));
+      hero.style.setProperty('--gx', `${gx.toFixed(2)}%`);
+      hero.style.setProperty('--gy', `${gy.toFixed(2)}%`);
+      requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+  }
+</script>

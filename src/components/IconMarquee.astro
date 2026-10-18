@@ -1,0 +1,24 @@
+---
+import { Image } from 'astro:assets';
+import { games } from '../lib/games';
+
+const rows = [games, [...games].reverse()];
+---
+
+<section class="relative border-y border-white/5 bg-ink-900/40 py-10" aria-label="All our game icons">
+  <p class="reveal mb-8 text-center text-xs font-semibold uppercase tracking-[0.3em] text-stone-500">
+    {games.length} games and counting
+  </p>
+  <div class="flex flex-col gap-4" aria-hidden="true">
+    {rows.map((row, r) => (
+      <div class="marquee overflow-hidden">
+        <div class={`marquee-track flex w-max gap-4 ${r ? 'reverse' : ''}`} style={`--dur:${r ? 95 : 80}s`}>
+          {[...row, ...row].map((game) => (
+            <Image src={game.icon} alt="" width={72} height={72} densities={[1, 2]} format="webp" quality={80}
+              class="h-16 w-16 shrink-0 rounded-2xl ring-1 ring-white/10 transition duration-500 hover:-translate-y-1 hover:scale-110 hover:ring-ember-400/60 sm:h-[72px] sm:w-[72px]" />
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</section>

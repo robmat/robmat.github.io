@@ -1,0 +1,77 @@
+---
+import { Image } from 'astro:assets';
+import { games, groups } from '../lib/games';
+
+const blurbs: Record<string, { line: string; cover: string; layout: string }> = {
+  story: {
+    line: 'Interactive romance and mystery. Your choices write the ending.',
+    cover: 'art_thief2',
+    layout: 'lg:col-span-4 lg:row-span-2 min-h-[22rem] lg:min-h-[30rem]',
+  },
+  puzzle: {
+    line: 'Logic puzzles where every solved board unlocks a reward.',
+    cover: 'sgtpuzzles_blocknet',
+    layout: 'lg:col-span-2 min-h-[16rem]',
+  },
+  casual: {
+    line: 'Pinball, blocks, snake and sudoku, all with a pretty twist.',
+    cover: 'android_pinball_with_pics_as_prize',
+    layout: 'lg:col-span-2 min-h-[16rem]',
+  },
+  photos: {
+    line: 'HD photos and wallpapers, hand-picked and refreshed.',
+    cover: 'beautiful_asian_wallpapers',
+    layout: 'lg:col-span-6 min-h-[16rem]',
+  },
+};
+
+const tiles = groups.map((g) => {
+  const members = games.filter((x) => x.group === g.id).sort((a, b) => (b.votes ?? 0) - (a.votes ?? 0));
+  const blurb = blurbs[g.id];
+  return {
+    ...g,
+    ...blurb,
+    count: members.length,
+    icons: members.slice(0, 3),
+    coverImage: (members.find((m) => m.media === blurb.cover) ?? members[0]).bannerImage,
+  };
+});
+---
+
+<section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32">
+  <div class="reveal flex flex-col justify-between gap-6 md:flex-row md:items-end">
+    <h2 class="max-w-2xl text-4xl font-bold leading-[0.95] tracking-[-0.03em] text-white sm:text-6xl">
+      Four ways to <span class="font-serif font-normal italic text-ember-300">lose an evening.</span>
+    </h2>
+    <p class="max-w-sm text-stone-400">Pick a mood. Every tile jumps to the matching games below.</p>
+  </div>
+
+  <div class="mt-12 grid gap-4 lg:grid-cols-6">
+    {tiles.map((tile, i) => (
+      <a href="#games" data-filter={tile.id} data-cursor="View"
+        class={`spot tilt reveal group relative flex flex-col justify-end overflow-hidden rounded-[2rem] bg-ink-800 p-7 ring-1 ring-white/10 ${tile.layout}`}
+        data-tilt="4" style={`--d:${i * 90}ms`}>
+        <Image src={tile.coverImage} alt="" widths={[600, 1024]} sizes="(min-width: 1024px) 66vw, 100vw" format="webp" quality={70}
+          class="absolute inset-0 -z-10 h-full w-full object-cover opacity-55 transition duration-[1.2s] ease-[var(--ease-out-expo)] group-hover:scale-105 group-hover:opacity-70" />
+        <div class="absolute inset-0 -z-10 bg-gradient-to-t from-ink-950 via-ink-950/75 to-ink-950/10"></div>
+
+        <div class="fan mb-auto flex self-end pb-8 pr-6">
+          {tile.icons.map((game, j) => (
+            <Image src={game.icon} alt="" width={64} height={64} densities={[1, 2]} format="webp"
+              class={`h-14 w-14 rounded-2xl shadow-xl shadow-black/60 ring-1 ring-white/15 sm:h-16 sm:w-16 ${j ? '-ml-6' : ''}`} style={`z-index:${j === 1 ? 3 : 1}`} />
+          ))}
+        </div>
+
+        <p class="flex items-baseline gap-3">
+          <span class="font-serif text-6xl italic leading-none text-ember-300 sm:text-7xl">{tile.count}</span>
+          <span class="text-2xl font-bold tracking-tight text-white sm:text-3xl">{tile.label}</span>
+        </p>
+        <p class="mt-3 max-w-md text-stone-300">{tile.line}</p>
+        <span class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-ember-300">
+          Show {tile.label.toLowerCase()} games
+          <span class="transition-transform duration-500 group-hover:translate-x-1.5">→</span>
+        </span>
+      </a>
+    ))}
+  </div>
+</section>

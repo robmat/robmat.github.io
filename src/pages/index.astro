@@ -1,18 +1,18 @@
 ---
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import IconMarquee from '../components/IconMarquee.astro';
+import Featured from '../components/Featured.astro';
+import Bento from '../components/Bento.astro';
 import GameCard from '../components/GameCard.astro';
-import PlayIcon from '../components/PlayIcon.astro';
-import Rating from '../components/Rating.astro';
 import { games, groups, playUrl, appStoreUrl, PLAY_DEVELOPER_URL, SUPPORT_EMAIL } from '../lib/games';
 
-const featured = games.find((g) => g.featured)!;
 const groupOrder = groups.map((g) => g.id);
 const listed = games
   .filter((g) => !g.featured)
   .sort((a, b) => groupOrder.indexOf(a.group) - groupOrder.indexOf(b.group) || (b.votes ?? 0) - (a.votes ?? 0));
-const totalReviews = games.reduce((sum, g) => sum + (g.votes ?? 0), 0);
-const iosCount = games.filter((g) => g.appStore).length;
+const iosGames = games.filter((g) => g.appStore);
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -39,98 +39,122 @@ const jsonLd = {
 
 <Base
   title="Emberfox Games — puzzles, stories and photo apps for Android and iOS"
-  description={`Emberfox Games makes interactive romance stories, picture-reward puzzle games and HD photo and wallpaper apps. ${games.length} apps on Google Play, ${iosCount} on the App Store.`}>
+  description={`Emberfox Games makes interactive romance stories, picture-reward puzzle games and HD photo and wallpaper apps. ${games.length} apps on Google Play, ${iosGames.length} on the App Store.`}>
 
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
-  <!-- Hero -->
-  <section class="relative overflow-hidden">
-    <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_60%_at_70%_30%,rgba(242,107,29,.25),transparent_70%)]"></div>
-    <div class="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-14 sm:px-6 lg:grid-cols-2 lg:py-24">
+  <Hero />
+  <IconMarquee />
+  <Featured />
+  <Bento />
+
+  <!-- Catalog -->
+  <section id="games" class="mx-auto max-w-7xl scroll-mt-24 px-4 pb-28 sm:px-6">
+    <div class="reveal mb-10 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
       <div>
-        <p class="mb-4 text-xs font-semibold uppercase tracking-widest text-ember-400">Indie studio · Android &amp; iOS</p>
-        <h1 class="text-4xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
-          Puzzles, stories and <span class="text-ember-400">pretty pictures</span>.
-        </h1>
-        <p class="mt-5 max-w-xl text-lg text-stone-400">
-          Interactive romance stories, brain-teasing puzzles where every win unlocks a reward, and HD photo &amp; wallpaper apps.
-        </p>
-        <div class="mt-8 flex flex-wrap items-center gap-4">
-          <a href={PLAY_DEVELOPER_URL} data-conversion
-            class="inline-flex items-center gap-3 rounded-xl bg-white px-5 py-3 font-semibold text-ink-900 shadow-lg shadow-black/40 transition hover:-translate-y-0.5">
-            <PlayIcon /> All games on Google Play
-          </a>
-          <a href="#games" class="font-semibold text-stone-300 hover:text-white">Browse games ↓</a>
-        </div>
-        <dl class="mt-10 flex gap-10 text-sm">
-          <div><dt class="text-stone-500">Apps on Google Play</dt><dd class="text-2xl font-extrabold text-white">{games.length}</dd></div>
-          <div><dt class="text-stone-500">Player reviews</dt><dd class="text-2xl font-extrabold text-white">{totalReviews}+</dd></div>
-          <div><dt class="text-stone-500">Also on iOS</dt><dd class="text-2xl font-extrabold text-white">{iosCount}</dd></div>
-        </dl>
+        <p class="text-xs font-semibold uppercase tracking-[0.3em] text-ember-400">The whole catalog</p>
+        <h2 class="mt-3 text-4xl font-bold tracking-[-0.03em] text-white sm:text-6xl">All <span class="font-serif font-normal italic text-ember-300">{listed.length + 1}</span> games</h2>
       </div>
-
-      <!-- Featured -->
-      <a href={playUrl(featured.id)} data-conversion
-        class="group block overflow-hidden rounded-3xl bg-ink-800 shadow-2xl shadow-black/50 ring-1 ring-white/10 transition hover:ring-ember-500/60">
-        <div class="relative overflow-hidden">
-          <Image src={featured.bannerImage} alt={`${featured.name} artwork`} widths={[600, 1024]}
-            sizes="(min-width: 1024px) 600px, 100vw" format="webp" quality={80} priority
-            class="aspect-[1024/500] w-full object-cover transition duration-500 group-hover:scale-[1.02]" />
-          <span class="absolute left-4 top-4 rounded-full bg-ember-500 px-3 py-1 text-xs font-bold text-ink-900">Most reviewed</span>
-        </div>
-        <div class="flex items-center gap-4 p-5">
-          <Image src={featured.icon} alt="" width={64} height={64} densities={[1, 2]} format="webp"
-            class="h-16 w-16 rounded-2xl ring-1 ring-white/10" />
-          <div class="min-w-0">
-            <p class="text-xs font-semibold uppercase tracking-wider text-ember-300">{featured.category} · <Rating game={featured} /></p>
-            <p class="text-xl font-extrabold leading-tight text-white">{featured.name}</p>
-            <p class="truncate text-sm text-stone-400">{featured.desc}</p>
-          </div>
-          <span class="ml-auto hidden shrink-0 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold transition group-hover:bg-ember-500 group-hover:text-ink-900 sm:inline-block">Play free</span>
-        </div>
-      </a>
-    </div>
-  </section>
-
-  <!-- Games -->
-  <section id="games" class="mx-auto max-w-7xl scroll-mt-20 px-4 pb-20 sm:px-6">
-    <div class="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-      <h2 class="text-3xl font-extrabold tracking-tight text-white">Our games</h2>
-      <div id="filters" class="flex flex-wrap gap-2" role="group" aria-label="Filter by genre">
-        <button type="button" class="chip rounded-full border border-white/15 px-4 py-1.5 text-sm font-semibold transition hover:border-white/40" aria-pressed="true" data-group="">All</button>
+      <div id="filters" class="relative flex flex-wrap gap-1 self-start rounded-full border border-white/10 bg-white/[0.03] p-1 backdrop-blur lg:self-auto" role="group" aria-label="Filter by genre">
+        <span class="chip-indicator pointer-events-none absolute left-0 top-1 h-[calc(100%-0.5rem)] rounded-full bg-ember-400 shadow-[0_0_30px_-5px_var(--color-ember-400)]" aria-hidden="true"></span>
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm font-semibold" aria-pressed="true" data-group="">All</button>
         {groups.map((g) => (
-          <button type="button" class="chip rounded-full border border-white/15 px-4 py-1.5 text-sm font-semibold transition hover:border-white/40" aria-pressed="false" data-group={g.id}>
+          <button type="button" class="chip rounded-full px-4 py-2 text-sm font-semibold" aria-pressed="false" data-group={g.id}>
             {g.label} <span class="opacity-60">{listed.filter((x) => x.group === g.id).length}</span>
           </button>
         ))}
       </div>
     </div>
-    <ul id="grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {listed.map((game) => <GameCard game={game} />)}
+    <ul id="grid" class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {listed.map((game, i) => <GameCard game={game} index={i} />)}
     </ul>
   </section>
 
-  <!-- Contact -->
-  <section id="contact" class="mx-auto max-w-7xl scroll-mt-20 px-4 pb-20 sm:px-6">
-    <div class="flex flex-col justify-between gap-6 rounded-3xl bg-gradient-to-br from-ember-600/30 to-ink-800 p-8 ring-1 ring-white/10 sm:p-12 md:flex-row md:items-center">
-      <div>
-        <h2 class="text-2xl font-extrabold text-white sm:text-3xl">Questions, bugs or ideas?</h2>
-        <p class="mt-2 text-stone-400">Write to us. Playing on iOS? <a href={appStoreUrl('6759834734')} data-conversion class="underline hover:text-white">Arrows Untangle</a> and <a href={appStoreUrl('6804949462')} data-conversion class="underline hover:text-white">Screw Sort Puzzle</a> are on the App Store too.</p>
+  <!-- iPhone -->
+  <section id="iphone" class="relative scroll-mt-24 overflow-hidden border-y border-white/5 bg-gradient-to-b from-steel-900/60 to-ink-950 py-24 sm:py-32">
+    <div class="pointer-events-none absolute -right-40 top-0 h-[30rem] w-[30rem] rounded-full bg-steel-500/20 blur-[120px]"></div>
+    <div class="mx-auto grid max-w-7xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-2">
+      <div class="reveal">
+        <p class="text-xs font-semibold uppercase tracking-[0.3em] text-steel-300">Now on iPhone</p>
+        <h2 class="mt-4 text-4xl font-bold leading-[0.95] tracking-[-0.03em] text-white sm:text-6xl">
+          Same puzzles, <span class="font-serif font-normal italic text-steel-300">other pocket.</span>
+        </h2>
+        <p class="mt-6 max-w-md text-lg text-stone-400">Two of our puzzle games are on the App Store too.</p>
       </div>
-      <a href={`mailto:${SUPPORT_EMAIL}`} data-conversion
-        class="shrink-0 rounded-xl bg-white px-6 py-3 font-semibold text-ink-900 transition hover:-translate-y-0.5">{SUPPORT_EMAIL}</a>
+      <div class="grid gap-5 sm:grid-cols-2">
+        {iosGames.map((game, i) => (
+          <a href={appStoreUrl(game.appStore!)} data-conversion data-cursor="iOS"
+            class="spot tilt reveal group flex flex-col items-center rounded-[2rem] bg-white/[0.03] px-6 pb-7 pt-10 text-center ring-1 ring-white/10" style={`--d:${i * 120}ms`}>
+            <div class="bob" style={`--d:${i * -2.5}s`}>
+              <Image src={game.icon} alt="" width={112} height={112} densities={[1, 2]} format="webp"
+                class="h-28 w-28 rounded-[1.75rem] shadow-[0_25px_50px_-12px_rgb(0_0_0/0.8)] ring-1 ring-white/15" />
+            </div>
+            <h3 class="mt-7 text-xl font-semibold tracking-tight text-white">{game.name}</h3>
+            <p class="mt-2 text-sm text-stone-400">{game.desc}</p>
+            <span class="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink-950 transition group-hover:bg-ember-200">
+              <svg viewBox="0 0 384 512" class="h-4 w-4" aria-hidden="true"><path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+              App Store
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="mx-auto max-w-7xl scroll-mt-24 px-4 py-24 sm:px-6 sm:py-32">
+    <div class="ember-ring reveal rounded-[2.5rem]">
+      <div class="relative overflow-hidden rounded-[2.5rem] bg-ink-900 px-6 py-16 text-center sm:px-16 sm:py-24">
+        <div class="pointer-events-none absolute left-1/2 top-0 h-64 w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-ember-500/25 blur-[100px]"></div>
+        <h2 class="mx-auto max-w-3xl text-4xl font-bold leading-[0.95] tracking-[-0.03em] text-white sm:text-7xl">
+          Found a bug? <span class="font-serif font-normal italic text-ember-gradient">Got an idea?</span>
+        </h2>
+        <p class="mx-auto mt-6 max-w-md text-lg text-stone-400">Questions, bug reports and ideas all go to the same inbox.</p>
+        <a href={`mailto:${SUPPORT_EMAIL}`} data-conversion data-magnetic="0.4"
+          class="mt-10 inline-flex items-center gap-3 rounded-full bg-white px-6 py-4 text-base font-semibold sm:px-8 sm:text-lg text-ink-950 shadow-[0_20px_60px_-15px_rgb(255_138_61/0.7)] transition-colors hover:bg-ember-200">
+          <span data-magnetic-inner>{SUPPORT_EMAIL} →</span>
+        </a>
+      </div>
     </div>
   </section>
 </Base>
 
 <script>
   const filters = document.getElementById('filters')!;
+  const indicator = filters.querySelector<HTMLElement>('.chip-indicator')!;
   const cards = document.querySelectorAll<HTMLElement>('#grid > li');
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // The orange pill slides under whichever chip is active.
+  const moveIndicator = () => {
+    const active = filters.querySelector<HTMLElement>('[aria-pressed="true"]')!;
+    indicator.style.width = `${active.offsetWidth}px`;
+    indicator.style.transform = `translate(${active.offsetLeft}px, ${active.offsetTop - 4}px)`;
+  };
+  moveIndicator();
+  new ResizeObserver(moveIndicator).observe(filters);
+  document.fonts?.ready.then(moveIndicator);
+
+  const select = (group: string) => {
+    filters.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.group === group)));
+    moveIndicator();
+    const apply = () => cards.forEach((card) => {
+      card.hidden = !!group && card.dataset.group !== group;
+      card.classList.add('is-in');
+    });
+    // Cards glide to their new places where View Transitions are supported.
+    const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
+    if (doc.startViewTransition && !reduceMotion) doc.startViewTransition(apply);
+    else apply();
+  };
+
   filters.addEventListener('click', (e) => {
     const button = (e.target as HTMLElement).closest('button');
-    if (!button) return;
-    filters.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
-    const group = button.dataset.group;
-    cards.forEach((card) => (card.hidden = !!group && card.dataset.group !== group));
+    if (button) select(button.dataset.group ?? '');
   });
+
+  // Bento tiles jump to the catalog with their genre selected.
+  document.querySelectorAll<HTMLElement>('[data-filter]').forEach((tile) =>
+    tile.addEventListener('click', () => select(tile.dataset.filter!)),
+  );
 </script>
