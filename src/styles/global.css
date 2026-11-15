@@ -290,7 +290,7 @@
   color: var(--color-ink-950);
 }
 .chip-indicator {
-  transition: transform 0.55s var(--ease-out-expo), width 0.55s var(--ease-out-expo);
+  transition: transform 0.55s var(--ease-out-expo), width 0.55s var(--ease-out-expo), height 0.55s var(--ease-out-expo);
 }
 
 ::view-transition-group(*) {

@@ -8,6 +8,11 @@ const blurbs: Record<string, { line: string; cover: string; layout: string }> = 
     cover: 'art_thief2',
     layout: 'lg:col-span-4 lg:row-span-2 min-h-[22rem] lg:min-h-[30rem]',
   },
+  strategy: {
+    line: 'Turn-based space 4X: explore, colonize, research and conquer the galaxy.',
+    cover: 'moo2clone',
+    layout: 'lg:col-span-2 min-h-[16rem]',
+  },
   puzzle: {
     line: 'Logic puzzles where every solved board unlocks a reward.',
     cover: 'sgtpuzzles_blocknet',
@@ -16,12 +21,12 @@ const blurbs: Record<string, { line: string; cover: string; layout: string }> = 
   casual: {
     line: 'Pinball, blocks, snake and sudoku, all with a pretty twist.',
     cover: 'android_pinball_with_pics_as_prize',
-    layout: 'lg:col-span-2 min-h-[16rem]',
+    layout: 'lg:col-span-3 min-h-[16rem]',
   },
   photos: {
     line: 'HD photos and wallpapers, hand-picked and refreshed.',
     cover: 'beautiful_asian_wallpapers',
-    layout: 'lg:col-span-6 min-h-[16rem]',
+    layout: 'lg:col-span-3 min-h-[16rem]',
   },
 };
 
@@ -41,7 +46,7 @@ const tiles = groups.map((g) => {
 <section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32">
   <div class="reveal flex flex-col justify-between gap-6 md:flex-row md:items-end">
     <h2 class="max-w-2xl text-4xl font-bold leading-[0.95] tracking-[-0.03em] text-white sm:text-6xl">
-      Four ways to <span class="font-serif font-normal italic text-ember-300">lose an evening.</span>
+      Five ways to <span class="font-serif font-normal italic text-ember-300">lose an evening.</span>
     </h2>
     <p class="max-w-sm text-stone-400">Pick a mood. Every tile jumps to the matching games below.</p>
   </div>

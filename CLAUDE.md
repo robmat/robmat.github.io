@@ -37,7 +37,7 @@ There are no tests or linters. `npm run build` is the check: it fails on a missi
 ### Adding a game
 
 1. Copy `launcher.png` and `play_store_graphic.png` from the game's repo to `src/assets/games/<folder>/`.
-2. Add an entry to `src/data/games.json` with the listing's title, short description and category from Google Play.
+2. Add an entry to `src/data/games.json` with the listing's title, short description and category from Google Play. A new `group` also needs a tile in the `blurbs` map in `src/components/Bento.astro` (text, cover, grid span).
 3. `npm run build`.
 
 ## Analytics / consent
