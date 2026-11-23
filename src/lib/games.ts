@@ -38,6 +38,8 @@ export const games: GameWithImages[] = (catalog.games as Game[]).map((g) => ({
 }));
 
 export const playUrl = (id: string) => `https://play.google.com/store/apps/details?id=${id}`;
-export const appStoreUrl = (id: string) => `https://apps.apple.com/app/id${id}`;
+// pt is Emberfox Games' provider token and ct the campaign: App Store Connect's Analytics > Campaigns counts
+// the downloads that came from this site.
+export const appStoreUrl = (id: string) => `https://apps.apple.com/app/id${id}?pt=128604356&ct=emberfox_site&mt=8`;
 export const PLAY_DEVELOPER_URL = 'https://play.google.com/store/apps/dev?id=8228670503574649511';
 export const SUPPORT_EMAIL = 'support@emberfox.online';
